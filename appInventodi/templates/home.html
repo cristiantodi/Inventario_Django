@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}
+    InverTodi
+{% endblock %}
+
+{% block content %}
+<div class="row row-cols-2 row-cols-md-4 gx-4 gy-4 text-center">
+    <div style="display: flex; justify-content: flex-start; width: 80%;">
+        <form method="get" action="{% url 'filtrar' %}" role="search">
+            <input class="form-control" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ request.GET.q }}">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+    {% for producto in products %}
+        <div class="col-6 col-sm-4 ">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <img class="" title="{{producto.nombre}}" src="{{producto.imagen.url}}" width="100%" height="225">
+                    <div class="card-body" style="text-align: start; margin: 0 !important;">
+                        <p style="margin: 0;">{{producto.nombre}}</p>
+                        <p style="margin: 0;" >{{producto.contenido}}</p>
+                        {% if producto.cantidad > 0 %}
+                            <div class="" style="text-align: end;">
+                                <small>$ {{producto.precio}}</small>
+                            </div>
+                        {% else %}
+                            <div class="" style="text-align: end;">
+                                <small>No disponible</small>
+                            </div>
+                        {% endif %}    
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}     
+</div>
+{% endblock %}
