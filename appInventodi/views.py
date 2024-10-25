@@ -12,9 +12,7 @@ def home(request):
     return render(request,"home.html", {'grupos': grupos, 'products':products})
 
 def lista_productos(request):
-    query = request.GET.get('q')
+    query = request.GET.get('buscar')
     if query:
         products = productos.objects.filter(nombre__icontains=query)
-    else:
-        products = productos.objects.all()
     return render(request, 'home.html', {'products': products})

@@ -4,12 +4,53 @@
     Tienda
 {% endblock %}
 
-    
-
 {% block content %}
-    <h1>Tienda</h1>
+
+  <div style="margin-top: 2rem;">
     
-    </div>
-
-
+    <div style="width: 100%; display: flex; justify-content: center;">
+      <div style="width: 96%;">
+        <div style="width: 50%; margin-bottom: 1rem;">
+          <form method="get" action="{% url 'filtrar' %}" role="search" style="display: flex;">
+              <input class="form-control" type="search" name="buscar" placeholder="Registrar" aria-label="Registrar" value="{{ request.GET.buscar }}">
+              <button class="btn btn-outline-success" type="submit">Registrar</button>
+          </form>
+      </div>
+        <table class="table table-striped;">
+          <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">
+            <tr>
+              <th style="border-top-left-radius: 1rem;">Id</th>
+              <th style="width:14%">Imagen</th>
+              <th style="width:14%">Nombre</th>
+              <th style="width:19%">Description</th>
+              <th style="width:20%">Cantidad</th>
+              <th style="width:14%">Precio Unid</th>
+              <th style="width:14%; border-top-right-radius: 1rem">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for producto in products %}
+              <tr>
+              <td style="text-align: center;">{{producto.id}}</td>
+              <td>{{producto.imagen}}</td>
+              <td>{{producto.nombre}}</td>
+              <td>{{producto.contenido}}</td>
+              <td >
+                <div class="button-container">
+                  <button class="button-round">+</button>
+                  suma
+                  <button class="button-round">−</button>
+              </div>
+              </td>
+              <td style="text-align: center;">{{producto.precio}}</td>
+              <td style="text-align: center;">TOTAL</td>
+              </tr>
+            {% endfor %} 
+            <td colspan="6" style="text-align: center; background-color: rgb(124, 124, 124); border-bottom-left-radius: 1rem; font-weight: bold;">TOTAL A PAGAR :</td>
+            <td colspan="6" style=" background-color: rgb(124, 124, 124); border-bottom-right-radius: 1rem; font-weight: bold;">$</td>
+          </tbody>
+        </table>
+      </div>
+    </div> 
+  </div>
 {% endblock %}
