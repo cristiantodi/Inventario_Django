@@ -6,6 +6,7 @@
         <meta name="description" content="Desarrollo de sistema de inventario y venta">
         <meta name="author" content="Cristian Tole and Bootstrap contributors">
         <meta name="generator" content="Cristian 1.0">
+        <meta name="csrf-token" content="{{ csrf_token }}">
         
         <title>
             {% block title %} 
@@ -110,10 +111,10 @@
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <ul class="navbar-nav me-auto mb-2 mb-md-0">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{% url 'Home' %}">Inicio</a>
+                                <a class="nav-link {% if request.path == '/' %} active {% endif %}" aria-current="page" href="{% url 'Home' %}">Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{% url 'Tienda' %}">Tienda</a>
+                                <a class="nav-link  {% if request.path == '/tienda' %} active {% endif %}" aria-current="page" href="{% url 'Tienda' %}">Tienda</a>
                             </li>
                         </ul>
                         <div class="text-end">
@@ -150,6 +151,7 @@
 
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
         <script src="{% static 'js/color-modes.js' %}"></script> 
+        <script src="{% static 'js/myjs.js' %}"></script> 
 
     </body>
 </html>
