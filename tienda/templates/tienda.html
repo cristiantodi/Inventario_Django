@@ -14,7 +14,7 @@
               <input class="form-control" type="search" name="buscar" placeholder="Registrar" aria-label="Registrar" value="">
               <button class="btn btn-outline-success" type="submit">Registrar</button>
           </form>
-      </div>
+        </div>
         <table class="table table-striped;">
           <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">
             <tr>
@@ -32,7 +32,7 @@
             {% for producto in products %}
                 <tr>
                     <td class="text-center">{{ producto.id }}</td>
-                    <td>{{ producto.imagen }}</td>
+                    <td><img src="{{ producto.imagen.url }}" width="50"></td>
                     <td>{{ producto.nombre }}</td>
                     <td>{{ producto.contenido }}</td>
                     <td class="text-center">{{ producto.cantidad }}</td>

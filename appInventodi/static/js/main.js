@@ -77,3 +77,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// --------------------------SUMAR / RESTAR----------------------------------------------------
+function updateQuantity(button, delta) {
+    const quantityDisplay = delta === "increase" ? button.nextElementSibling : button.previousElementSibling;
+    let newQuantity = parseInt(quantityDisplay.innerText) + delta;
+  
+    if (newQuantity >= 0) {
+      quantityDisplay.innerText = newQuantity;
+      actualizarCantidad(button, newQuantity, delta);
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(event) {
+      if (event.target.classList.contains('add-button'))   
+   {
+        updateQuantity(event.target, "increase");
+      } else if (event.target.classList.contains('subtract-button')) {
+        updateQuantity(event.target, "decrease");
+      }
+    });
+  });
+
+function actualizarCantidad(button, nuevaCantidad, action) {
+    fetch("{% url 'buscar_producto' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ action: action, quantity_change: 1 })
+    });
+}

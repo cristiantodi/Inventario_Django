@@ -20,6 +20,7 @@
         <link href="{% static 'css/style.css' %}" rel="stylesheet">
         <link href="{% static 'css/grid.css' %}" rel="stylesheet">
         <link href="{% static 'css/carousel.css' %}" rel="stylesheet">
+        <link href="{% static 'css/table.css' %}" rel="stylesheet">
         <link href="{% static 'img/logo.ico' %}" type="image/vnd.icon" rel="icon">
         <style>
             html, body {
@@ -114,7 +115,10 @@
                                 <a class="nav-link {% if request.path == '/' %} active {% endif %}" aria-current="page" href="{% url 'Home' %}">Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link  {% if request.path == '/tienda' %} active {% endif %}" aria-current="page" href="{% url 'Tienda' %}">Tienda</a>
+                                <a class="nav-link  {% if request.path == '/tienda/' %} active {% endif %}" aria-current="page" href="{% url 'Tienda' %}">Tienda</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link  {% if request.path == '/tienda/inventario' %} active {% endif %}" aria-current="page" href="{% url 'lista_productos' %}">Inventario</a>
                             </li>
                         </ul>
                         <div class="text-end">
@@ -151,7 +155,8 @@
 
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
         <script src="{% static 'js/color-modes.js' %}"></script> 
-        <script src="{% static 'js/myjs.js' %}"></script> 
+        <script src="{% static 'js/main.js' %}"></script> 
+        <script  type="text/javascript" src="{% static 'js/table.js' %}"></script> 
 
     </body>
 </html>
