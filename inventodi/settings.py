@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     #My App's
     'user',
     'appInventodi',
+    'servicios',
     'tienda',
 ]
 

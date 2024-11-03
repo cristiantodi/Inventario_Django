@@ -47,7 +47,7 @@ z-index: 1;
 padding: 0 10px;
 user-select: none;
 text-transform: capitalize;
-background: #555555;
+/* background: #555555; */
 }
 
 .card table :is(th) {

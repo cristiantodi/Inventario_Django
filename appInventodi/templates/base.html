@@ -31,6 +31,7 @@
             }
 
             body {
+                font-family: var(--bs-body-font-family) !important;
                 display: flex;
                 flex-direction: column;
                 padding-bottom: 0 rem !important;
@@ -112,14 +113,20 @@
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <ul class="navbar-nav me-auto mb-2 mb-md-0">
                             <li class="nav-item">
-                                <a class="nav-link {% if request.path == '/' %} active {% endif %}" aria-current="page" href="{% url 'Home' %}">Inicio</a>
+                                <a class="nav-link {% if request.path == '/' %} present  {% endif %}" aria-current="page" href="{% url 'Home' %}">Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link  {% if request.path == '/tienda/' %} active {% endif %}" aria-current="page" href="{% url 'Tienda' %}">Tienda</a>
+                                <a class="nav-link  {% if request.path == '/tienda/tienda/' %} present {% endif %}" aria-current="page" href="{% url 'Tienda' %}">Tienda</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link  {% if request.path == '/tienda/inventario' %} active {% endif %}" aria-current="page" href="{% url 'lista_productos' %}">Inventario</a>
+                                <a class="nav-link  {% if request.path == '/servicios/' %} present {% endif %}" aria-current="page" href="{% url 'Servicios' %}">Servicios</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link  {% if request.path == '/tienda/productos/' %} present {% endif %}" aria-current="page" href="{% url 'lista_productos' %}">Inventario</a>
+                            </li>
+                            <!-- <li class="nav-item">
+                                <a class="nav-link  {% if request.path == '/contactanos/' %} present {% endif %}" aria-current="page" href="{% url 'contactanos' %}">Contactanos</a>
+                            </li> -->
                         </ul>
                         <div class="text-end">
                             <button type="button" class="btn btn-outline-light me-2">Login</button>

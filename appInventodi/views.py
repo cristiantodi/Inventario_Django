@@ -6,6 +6,9 @@ from django.contrib.auth import get_user_model
 User=get_user_model()
 # Create your views here.
 
+def contactanos(request):
+    return render(request,"contacto.html")
+
 def home(request):
     products=productos.objects.all()
     grupos = Group.objects.all()  # Obtener todos los grupos
@@ -16,3 +19,5 @@ def lista_productos(request):
     if query:
         products = productos.objects.filter(nombre__icontains=query)
     return render(request, 'home.html', {'products': products})
+
+

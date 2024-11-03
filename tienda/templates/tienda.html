@@ -5,61 +5,52 @@
 {% endblock %}
 
 {% block content %}
-
-  <div style="margin-top: 2rem;">
-    <div style="width: 100%; display: flex; justify-content: center;">
-      <div style="width: 96%;">
-        <div style="width: 50%; margin-bottom: 1rem;">
-          <form method="get" action="" role="search" style="display: flex;">
-              <input class="form-control" type="search" name="buscar" placeholder="Registrar" aria-label="Registrar" value="">
-              <button class="btn btn-outline-success" type="submit">Registrar</button>
-          </form>
-        </div>
-        <table class="table table-striped;">
-          <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">
-            <tr>
-              <th style="border-top-left-radius: 1rem; width:10%">Id</th>
-              <th style="width:15%">Imagen</th>
-              <th style="width:16%">Nombre</th>
-              <th style="width:19%">Description</th>
-              <th style="width:10%">Stock</th>
-              <th style="width:10%">Cantidad</th>
-              <th style="width:10%">Precio Unid</th>
-              <th style="width:10%; border-top-right-radius: 1rem">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for producto in products %}
-                <tr>
-                    <td class="text-center">{{ producto.id }}</td>
-                    <td><img src="{{ producto.imagen.url }}" width="50"></td>
-                    <td>{{ producto.nombre }}</td>
-                    <td>{{ producto.contenido }}</td>
-                    <td class="text-center">{{ producto.cantidad }}</td>
-                    <td>
-                        <div class="button-container">
-                            <button class="button-round add-button" data-product-id="{{ producto.id }}" data-precio="{{ producto.precio }}">+</button>
-                            <p id="cantidad-{{ producto.id }}">0</p>
-                            <button class="button-round subtract-button" data-product-id="{{ producto.id }}" data-precio="{{ producto.precio }}">−</button>
-                        </div>
-                    </td>
-                    <td class="text-center">{{ producto.precio }}</td>
-                    <td class="text-center" id="total-{{ producto.id }}">0</td>
-                </tr>
-                
-            {% endfor %}
-        </tbody>
-        <tfoot class="content-tr">
-          <td colspan="4" class="border-td-l text-vender button-vender button1">
-              <div class="button-container" style="width: 100%;">
-                  <label class="button-vender button1 " id="sell-button">Vender</label>
-              </div>
-          </td>
-          <td colspan="2" class="text-vender">TOTAL A PAGAR :</td>
-          <td colspan="2" style="text-align: right;" class="text-vender border-td-r text-center" id="total-pagar">$ 0</td>
-      </tfoot>
-        </table>
+<div style="margin-top: 2rem;">
+  <div style="width: 100%; display: flex; justify-content: center;">
+    <div style="width: 96%;">
+      <div style="width: 50%; margin-bottom: 1rem;">
+        <form id="buscar-form" role="search" style="display: flex;">
+          <input class="form-control" type="search" id="buscar" placeholder="Registrar" aria-label="Registrar">
+          <button class="btn btn-outline-success" type="button" onclick="buscarProducto()">Registrar</button>
+        </form>
       </div>
-    </div> 
-  </div>
+      <table class="table table-striped;">
+        <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">
+          <tr>
+            <th style="border-top-left-radius: 1rem; width:10%">Id</th>
+            <th style="width:15%">Imagenn</th>
+            <th style="width:16%">Nombre</th>
+            <th style="width:19%">Descripción</th>
+            <th style="width:10%">Stock</th>
+            <th style="width:10%">Cantidad</th>
+            <th style="width:10%">Precio Unid</th>
+            <th style="width:10%; border-top-right-radius: 1rem">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for producto in products %}
+              <tr>
+                  <td class="text-center">{{ producto.id }}</td>
+                  <td class="text-center" ><img class="class="text-center src="{{ producto.imagen }}" width="50"></td>
+                  <td>{{ producto.nombre }}</td>
+                  <td>{{ producto.contenido }}</td>
+                  <td class="text-center">{{ producto.cantidad }}</td>
+                  <td class="text-center cantidad-display">0</td>
+                  <td class="text-center precio-unid">{{ producto.precio }}</td>
+                  <td class="text-center total-display" id="total-parcial">0</td>
+              </tr>
+          {% endfor %}
+      </tbody>
+      <tfoot>
+        <td colspan="4"></td>
+        <td colspan="2">TOTAL A PAGAR :</td>
+        <td colspan="2" id="total-pagar">$ 0</td>
+      </tfoot>
+      </table>
+      <div class="button-container" style="width: 100%;">
+          <button id="vender">Vender</button>
+      </div>
+    </div>
+  </div> 
+</div>
 {% endblock %}

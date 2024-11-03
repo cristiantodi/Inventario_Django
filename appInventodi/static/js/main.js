@@ -1,80 +1,91 @@
-// Función para obtener el token CSRF
-function getCSRFToken() {
-    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+// -------------------------------------TIENDA-------------------------------------------------------
+let productosTabla = {};  // Objeto para guardar productos y sus cantidades en la tabla
+
+function buscarProducto() {
+    const productoId = document.getElementById('buscar').value;
+    
+    fetch(`obtener-producto/?buscar=${productoId}`)
+        .then(response => response.json())
+        .then(data => {
+            agregarProductoATabla(data);
+            actualizarTotalPagar();
+        })
+        .catch(error => console.error('Error:', error));
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const addButtons = document.querySelectorAll('.add-button');
-    const subtractButtons = document.querySelectorAll('.subtract-button');
-    const sellButton = document.getElementById('sell-button');
-
-    addButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const productId = button.getAttribute('data-product-id');
-            const cantidadElement = document.getElementById(`cantidad-${productId}`);
-            let cantidad = parseInt(cantidadElement.innerText);
-            cantidad += 1;
-            cantidadElement.innerText = cantidad;
-
-            updateTotal(productId, cantidad, button);
-        });
-    });
-
-    subtractButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const productId = button.getAttribute('data-product-id');
-            const cantidadElement = document.getElementById(`cantidad-${productId}`);
-            let cantidad = parseInt(cantidadElement.innerText);
-            if (cantidad > 0) {
-                cantidad -= 1;
-                cantidadElement.innerText = cantidad;
-
-                updateTotal(productId, cantidad, button);
-            }
-        });
-    });
-
-    sellButton.addEventListener('click', () => {
-        const products = Array.from(document.querySelectorAll('.add-button')).map(button => {
-            const productId = button.getAttribute('data-product-id');
-            const cantidad = parseInt(document.getElementById(`cantidad-${productId}`).innerText);
-            return { id: productId, cantidad: cantidad };
-        });
+function agregarProductoATabla(producto) {
+    // Verificar si el producto ya está en la tabla
+    if (productosTabla[producto.id]) {
+        // Incrementar cantidad si el producto ya está
+        productosTabla[producto.id].cantidad++;
+    } else {
+        // Agregar el producto a la tabla si es nuevo
+        productosTabla[producto.id] = {
+            ...producto,
+            cantidad: 1,
+        };
+    }
     
-        // Enviar la información al servidor para actualizar la base de datos
-        fetch('/tienda', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify({ products: products })
-        }).then(response => response.json()).then(data => {
-            if (data.success) {
-                alert('Venta realizada con éxito');
-                location.reload();
-            } else {
-                alert('Error al vender productos');
-            }
-        });
-    });
+    actualizarTabla();
+}
 
-    function updateTotal(productId, cantidad, button) {
-        const precio = parseFloat(button.getAttribute('data-precio'));
-        const totalElement = document.getElementById(`total-${productId}`);
-        const total = precio * cantidad;
-        totalElement.innerText = total;
+function actualizarTabla() {
+    const tbody = document.querySelector('table tbody');
+    tbody.innerHTML = '';  // Limpiar la tabla
 
-        updateTotalPagar();
+    // Recorrer productosTabla y renderizar cada producto
+    for (const id in productosTabla) {
+        const producto = productosTabla[id];
+        const total = producto.precio * producto.cantidad;
+
+        tbody.innerHTML += `
+            <tr>
+                <td class="text-center">${producto.id}</td>
+                <td><img src="${producto.imagen_url}" width="50"></td>
+                <td>${producto.nombre}</td>
+                <td>${producto.contenido}</td>
+                <td class="text-center">${producto.stock}</td>
+                <td class="text-center">${producto.cantidad}</td>
+                <td class="text-center">${producto.precio}</td>
+                <td class="text-center total-display">${total}</td>
+            </tr>
+        `;
+    }
+}
+
+function actualizarTotalPagar() {
+    let totalPagar = 0;
+
+    for (const id in productosTabla) {
+        const producto = productosTabla[id];
+        totalPagar += producto.precio * producto.cantidad;
     }
 
-    function updateTotalPagar() {
-        let totalPagar = 0;
-        document.querySelectorAll('td[id^="total-"]').forEach(totalElement => {
-            totalPagar += parseFloat(totalElement.innerText) || 0;
-        });
-        document.getElementById('total-pagar').innerText = `$${totalPagar}`;
-    }
+    document.getElementById('total-pagar').innerText = `$ ${totalPagar}`;
+}
+
+// ---------------------------------------------------------------------------------
+document.getElementById('vender').addEventListener('click', () => {
+    fetch('/tienda/vender-productos/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(productosTabla)
+    })
+    .then(response => {
+        if (response.ok) {
+            // Limpiar la tabla y los productos después de la venta
+            productosTabla = {};
+            actualizarTabla();
+            actualizarTotalPagar();
+            alert('Venta realizada con éxito');
+        } else {
+            alert('Error en la venta');
+        }
+    })
+    .catch(error => console.error('Error:', error));
 });
 
 // --------------------------SUMAR / RESTAR----------------------------------------------------
