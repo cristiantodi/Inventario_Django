@@ -116,13 +116,16 @@
                                 <a class="nav-link {% if request.path == '/' %} present  {% endif %}" aria-current="page" href="{% url 'Home' %}">Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link  {% if request.path == '/tienda/tienda/' %} present {% endif %}" aria-current="page" href="{% url 'Tienda' %}">Tienda</a>
+                                <a class="nav-link  {% if request.path == '/tienda/' %} present {% endif %}" aria-current="page" href="{% url 'Tienda' %}">Tienda</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link  {% if request.path == '/servicios/' %} present {% endif %}" aria-current="page" href="{% url 'Servicios' %}">Servicios</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link  {% if request.path == '/tienda/productos/' %} present {% endif %}" aria-current="page" href="{% url 'lista_productos' %}">Inventario</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link  {% if request.path == '/abonos/' %} present {% endif %}" aria-current="page" href="{% url 'Abonos' %}">Abono</a>
                             </li>
                             <!-- <li class="nav-item">
                                 <a class="nav-link  {% if request.path == '/contactanos/' %} present {% endif %}" aria-current="page" href="{% url 'contactanos' %}">Contactanos</a>
@@ -156,6 +159,9 @@
                 </a>
                 <a href="http://www.whatsapp.com">
                     <img class="ms-3" src="{% static 'img/what.png' %}" alt="WhatsApp" width="40" height="40" style="border-radius: 22%;">
+                </a> 
+                <a href="https://maps.app.goo.gl/puUXcixSYL7CX7vb6">
+                    <img class="ms-3" src="{% static 'img/map.png' %}" alt="WhatsApp" width="40" height="40" style="border-radius: 22%;">
                 </a> 
             </ul>
         </footer>

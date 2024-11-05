@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Abonos
+{% endblock %}
+
+{% block content %}
+<div style="margin-top: 2rem;">
+  <div style="width: 100%; display: flex; justify-content: center;">
+    <div style="width: 96%;">
+      <div style="width: 50%; margin-bottom: 1rem;">
+        <form  role="search" style="display: flex;">
+          <input class="form-control" type="search" placeholder="Registrar" aria-label="Registrar">
+          <button class="btn btn-outline-success" type="button" onclick="buscarProducto()">Registrar</button>
+        </form>
+      </div>
+      <table class="table table-striped;">
+        <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">
+          <tr>
+            <th style="border-top-left-radius: 1rem; width:8%">Cedula</th>
+            <th style="width:15%">Nombre</th>
+            <th style="width:8%">Imagen</th>
+            <th style="width:15%">Producto</th>
+            <th style="width:20%">Descripcion</th>
+            <th style="width:10%">Num Abonos</th>
+            <th style="width:10%">Total abonado</th>
+            <th style="width:10%; border-top-right-radius: 1rem">Precio Producto</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cliente in clientes %}
+                <tr>
+                    <td class="text-center">{{ cliente.documento }}</td>
+                    <td class="text-center">{{ cliente.nombre }}</td>
+                    <td class="text-center" >
+                            {% for prod in cliente.producto.all %}
+                                <img src="{{ prod.imagen.url }}" width="50" alt="{{ prod.nombre }}">
+                            {% endfor %}
+                        <img class="class="text-center src="{{ cliente.producto.imagen }}" width="50">
+                    </td>
+                    <td>
+                        {% for prod in cliente.producto.all %}
+                            {{ prod.nombre }} 
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for prod in cliente.producto.all %}
+                            {{ prod.contenido }}
+                        {% endfor %}
+                    </td>
+                    <td>{{ cliente.num_pagos }}</td>
+                    <td class="text-center">Pago abono</td>
+                        <td>
+                            {% for prod in cliente.producto.all %}
+                                {{ prod.precio }}
+                            {% endfor %}
+                        </td>
+                    </td>
+                </tr>
+          {% endfor %}
+      </tbody>
+      <tfoot>
+        <td colspan="4"></td>
+        <td colspan="2">TOTAL A PAGAR :</td>
+        <td colspan="2" id="total-pagar">$ 0</td>
+      </tfoot>
+      </table>
+    </div>
+  </div> 
+</div>
+{% endblock %}

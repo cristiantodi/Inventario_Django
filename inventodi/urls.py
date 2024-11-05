@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include('appInventodi.urls')),
     path('tienda/', include('tienda.urls')),
     path('servicios/', include('servicios.urls')),
+    path('abonos/', include('abono.urls')),
 ]

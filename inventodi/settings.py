@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'appInventodi',
     'servicios',
     'tienda',
+    'abono',
 ]
 
 MIDDLEWARE = [
