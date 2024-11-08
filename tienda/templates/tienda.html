@@ -9,10 +9,14 @@
   <div style="width: 100%; display: flex; justify-content: center;">
     <div style="width: 96%;">
       <div style="width: 50%; margin-bottom: 1rem;">
-        <form id="buscar-form" role="search" style="display: flex;">
+        <!-- <form id="buscar-form" role="search" style="display: flex;">
           <input class="form-control" type="search" id="buscar" placeholder="Registrar" aria-label="Registrar">
           <button class="btn btn-outline-success" type="button" onclick="buscarProducto()">Registrar</button>
-        </form>
+        </form> -->
+        <form id="buscar-form" role="search" style="display: flex;" onsubmit="return false;">
+          <input class="form-control" type="search" id="buscar" placeholder="Registrar" aria-label="Registrar">
+          <button class="btn btn-outline-success" type="button" onclick="buscarProducto()">Registrar</button>
+      </form>
       </div>
       <table class="table table-striped;">
         <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">

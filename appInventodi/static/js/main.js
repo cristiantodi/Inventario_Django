@@ -11,7 +11,21 @@ function buscarProducto() {
             actualizarTotalPagar();
         })
         .catch(error => console.error('Error:', error));
+        
+    // Limpiar el campo de búsqueda después de registrar el producto
+    document.getElementById('buscar').value = '';
 }
+
+// Escuchar la tecla Enter en el input de búsqueda
+document.getElementById('buscar').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevenir el comportamiento predeterminado de recargar la página
+        buscarProducto(); // Llamar a la función para buscar el producto
+    }
+
+    
+});
+
 
 function agregarProductoATabla(producto) {
     // Verificar si el producto ya está en la tabla
@@ -41,7 +55,7 @@ function actualizarTabla() {
         tbody.innerHTML += `
             <tr>
                 <td class="text-center">${producto.id}</td>
-                <td><img src="${producto.imagen_url}" width="50"></td>
+                <td><img src="${producto.imagen_url}" width="50"></td> 
                 <td>${producto.nombre}</td>
                 <td>${producto.contenido}</td>
                 <td class="text-center">${producto.stock}</td>
@@ -88,7 +102,29 @@ document.getElementById('vender').addEventListener('click', () => {
     .catch(error => console.error('Error:', error));
 });
 
-// --------------------------SUMAR / RESTAR----------------------------------------------------
+//---------------------------------Eliminar producto de la tabla/tienda----------
+document.querySelector('table tbody').addEventListener('contextmenu', function(event) {
+    event.preventDefault(); // Prevenir el menú contextual predeterminado
+
+    // Obtener la fila y el ID del producto
+    const row = event.target.closest('tr');
+    const productoId = row.querySelector('td').innerText; // El primer <td> contiene el id
+
+    // Mostrar un cuadro de confirmación
+    const confirmar = window.confirm('¿Estás seguro de que deseas eliminar este producto de la tabla?');
+
+    if (confirmar) {
+        // Si el usuario confirma, eliminar el producto del objeto productosTabla
+        delete productosTabla[productoId];
+
+        // Actualizar la tabla y el total a pagar
+        actualizarTabla();
+        actualizarTotalPagar();
+
+        alert('Producto eliminado de la tabla');
+    }
+});
+// --------------------------Suma/Resta Inventario----------------------------------------------------
 function updateQuantity(button, delta) {
     const quantityDisplay = delta === "increase" ? button.nextElementSibling : button.previousElementSibling;
     let newQuantity = parseInt(quantityDisplay.innerText) + delta;
