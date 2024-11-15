@@ -5,76 +5,51 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Formulario de búsqueda por ID -->
-    <div style="width: 50%; margin: 2rem 0rem 1rem 2%;">
-        <form style="display: flex;" method="get" action="{% url 'lista_productos' %}">
-            <input type="text" name="query" id="query" placeholder="Ingrese ID o nombre">
-            <button class="btn btn-outline-success" type="submit">Buscar</button>
-        </form>
-    </div>
-    
 
-    <!-- Tabla de productos -->
-    <div style=" display: flex; justify-content: center;">
-        <div class="wrapper card ">
-            <table class="table table-striped;" style="margin: 0;">
-                <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">
-                    <tr>
-                        <th>Id
-                            <span class="draggable" onmousedown="initResize(0)"></span>
-                        </th>
-                        <th class="line-left">Imagen
-                            <span class="draggable" onmousedown="initResize(1)"></span>
-                        </th>
-                        <th class="line-left">Nombre
-                            <span class="draggable" onmousedown="initResize(2)"></span>
-                        </th>
-                        <th class="line-left">Description
-                            <span class="draggable" onmousedown="initResize(3)"></span>
-                        </th>
-                        <th class="line-left">Cantidad
-                            <span class="draggable" onmousedown="initResize(4)"></span>
-                        </th>
-                        <th class="line-left">Precio Unid
-                            <span class="draggable"></span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for producto in productos %}
-                        <tr>
-                            <td>
-                                <span class="cell-content text-center" >{{ producto.id }}</span>
-                            </td>
-                            <td class="text-center">
-                                <img src="{{ producto.imagen.url }}" width="40">
-                            </td>
-                            <td>
-                                <span class="cell-content">{{ producto.nombre }}</span>
-                            </td>
-                            <td>
-                                <span class="cell-content">{{ producto.contenido }}</span>
-                            </td>
-                            <td >
-                                <div>
-                                    <form class="button-container" method="post" action="{% url 'lista_productos' %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="producto_id" value="{{ producto.id }}">
-                                        <button class="button-round add-button" type="submit" name="accion" value="decrementar">-</button>
-                                        {{ producto.cantidad }}
-                                        <button class="button-round subtract-button" type="submit" name="accion" value="incrementar">+</button>
-                                    </form>
-                                </div>                                
-                            </td>
-                            <td>
-                                <span class="cell-content text-center">
-                                    $ {{ producto.precio }}
-                                </span>
-                            </td>
-                        </tr>                        
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+{% csrf_token %}
+<div style="width: 100%; margin: 2rem 0rem 1rem 2%;">
+    <form style="display: flex;" method="get" action="{% url 'lista_productos' %}">
+        <input type="text" name="query" id="query" placeholder="Ingrese ID o nombre">
+        <button class="btn btn-outline-success" type="submit">Buscar</button>
+    </form>
+    <button type="button" id="guardar-btn">Guardar</button>
+</div>
+
+<div style="display: flex; justify-content: center;">
+    <div class="wrapper card">
+        <table class="table table-striped" style="margin: 0;">
+            <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">
+                <tr>
+                    <th>Id</th>
+                    <th class="line-left">Imagen</th>
+                    <th class="line-left">Nombre</th>
+                    <th class="line-left">Descripción</th>
+                    <th class="line-left">Stock</th>
+                    <th class="line-left">Cantidad</th>
+                    <th class="line-left">Precio Unid</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr data-producto-id="{{ producto.id }}">
+                    <td>{{ producto.id }}</td>
+                    <td class="text-center"><img src="{{ producto.imagen.url }}" width="40"></td>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.contenido }}</td>
+                    <td class="stock">{{ producto.cantidad }}</td>
+                    <td>{% csrf_token %}
+                        <div >
+                            <input type="number" id="cantidad-{{ producto.id }}" value="0" style="width: 3rem;">
+                        </div>
+                        
+                    </td>
+                    <td>${{ producto.precio }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+</div>
+
+
 {% endblock %}

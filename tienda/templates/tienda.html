@@ -8,11 +8,8 @@
 <div style="margin-top: 2rem;">
   <div style="width: 100%; display: flex; justify-content: center;">
     <div style="width: 96%;">
+      <h3>Registro de productos para su venta</h3>
       <div style="width: 50%; margin-bottom: 1rem;">
-        <!-- <form id="buscar-form" role="search" style="display: flex;">
-          <input class="form-control" type="search" id="buscar" placeholder="Registrar" aria-label="Registrar">
-          <button class="btn btn-outline-success" type="button" onclick="buscarProducto()">Registrar</button>
-        </form> -->
         <form id="buscar-form" role="search" style="display: flex;" onsubmit="return false;">
           <input class="form-control" type="search" id="buscar" placeholder="Registrar" aria-label="Registrar">
           <button class="btn btn-outline-success" type="button" onclick="buscarProducto()">Registrar</button>
@@ -35,7 +32,7 @@
           {% for producto in products %}
               <tr>
                   <td class="text-center">{{ producto.id }}</td>
-                  <td class="text-center" ><img class="class="text-center src="{{ producto.imagen }}" width="50"></td>
+                  <td class="text-center" ><img class="text-center" src="{{ producto.imagen }}" width="50"></td>
                   <td>{{ producto.nombre }}</td>
                   <td>{{ producto.contenido }}</td>
                   <td class="text-center">{{ producto.cantidad }}</td>

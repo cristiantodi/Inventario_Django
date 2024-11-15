@@ -179,3 +179,65 @@
   background-color: #04AA6D;
   color: white;
 }
+
+/* ------------CSS Tienda-------------------------- */
+.custom-confirmation-box {
+  position: fixed; /* Fijo a la ventana del navegador */
+  top: 50%; /* Centrado verticalmente */
+  left: 50%; /* Centrado horizontalmente */
+  transform: translate(-50%, -50%); /* Ajusta la posición para centrar */
+  background-color: #fff; /* Fondo blanco */
+  border: 1px solid #ccc; /* Borde gris */
+  padding: 20px; /* Espacio interior */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+  z-index: 1000; /* Asegurar que el cuadro esté por encima de otros elementos */
+  font-family: Arial, sans-serif; /* Fuente */
+  font-size: 14px; /* Tamaño de la fuente */
+  max-width: 300px; /* Ancho máximo del cuadro */
+  text-align: center; /* Centrar el contenido del texto */
+}
+
+.custom-confirmation-box p {
+  margin: 0 0 20px; /* Espaciado debajo del texto */
+}
+
+.custom-confirmation-box button {
+  margin: 5px; /* Espaciado alrededor de los botones */
+  padding: 5px 15px; /* Espacio interior de los botones */
+  cursor: pointer; /* Cambiar el cursor al pasar por encima */
+  border: none; /* Sin borde */
+  background-color: #007BFF; /* Fondo azul */
+  color: white; /* Texto blanco */
+  border-radius: 3px; /* Bordes redondeados */
+}
+
+.custom-confirmation-box button:hover {
+  background-color: #0056b3; /* Fondo azul más oscuro al pasar por encima */
+}
+
+/* -----------------------------Input Number--------------------------------- */
+.quantity{
+  display:flex;
+  width:160px;
+}
+
+/* it will support chrome and firefox */
+.quantity input[type=number]::-webkit-inner-spin-button,
+.quantity input[type=number]::-webkit-outer-spin-button{
+  -webkit-appearance:none;
+}
+
+.quantity input,.quantity button{
+  width:50px;
+  padding:.5em;
+  font-size:1.2rem;
+  text-align:center;
+  font-weight:900;
+  background:white;
+  border:1px solid #aaa;
+}
+
+.quantity input{
+  border-left:none;
+  border-right:none;
+}

@@ -48,25 +48,41 @@ def lista_productos(request):
     query = request.GET.get('query')
     productos_list = productos.objects.all()
 
-    # Verifica si la consulta de búsqueda existe
+    # Verificar si hay una consulta de búsqueda
     if query:
         try:
-            # Si es un número, busca por ID
+            # Si la consulta es un número, buscar por ID
             producto_id = int(query)
             productos_list = productos_list.filter(id=producto_id)
         except ValueError:
-            # Si no es un número, busca por nombre
+            # Si no es un número, buscar por nombre
             productos_list = productos_list.filter(nombre__icontains=query)
 
-    # Manejo de incremento o decremento de la cantidad
-    if request.method == 'POST':
-        producto = get_object_or_404(productos, id=request.POST.get('producto_id'))
-        accion = request.POST.get('accion')
-        if accion == 'incrementar':
-            producto.cantidad += 1
-        elif accion == 'decrementar' and producto.cantidad > 0:
-            producto.cantidad -= 1
-        producto.save()
-        return redirect('lista_productos')
-
+    # Manejo de incremento o decremento de la cantidad temporal
     return render(request, 'inventario.html', {'productos': productos_list})
+
+# ----------------------------------------------------------------------------
+
+def actualizar_stock(request):
+    if request.method == "POST":
+        try:
+            datos = json.loads(request.body)
+            cambios = datos.get('cambios', [])
+
+            for cambio in cambios:
+                producto_id = cambio['id']
+                cantidad_cambio = cambio['cantidad']
+
+                # Actualizar el producto en la base de datos
+                try:
+                    producto = productos.objects.get(id=producto_id)
+                    producto.cantidad += cantidad_cambio
+                    producto.save()
+                except productos.DoesNotExist:
+                    continue  # Si el producto no existe, saltar al siguiente cambio
+
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    return JsonResponse({"success": False, "error": "Método no permitido"})
