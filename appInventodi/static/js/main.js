@@ -51,13 +51,13 @@ function actualizarTabla() {
         tbody.innerHTML += `
             <tr>
                 <td class="text-center">${producto.id}</td>
-                <td><img src="${producto.imagen_url}" width="50"></td> 
+                <td class="text-center"><img src="${producto.imagen_url}" width="40"></td> 
                 <td>${producto.nombre}</td>
                 <td>${producto.contenido}</td>
                 <td class="text-center">${producto.stock}</td>
                 <td class="text-center">${producto.cantidad}</td>
-                <td class="text-center">${producto.precio}</td>
-                <td class="text-center total-display">${total}</td>
+                <td class="text-center">$ ${producto.precio}</td>
+                <td class="text-center total-display">$ ${total}</td>
             </tr>
         `;
     }

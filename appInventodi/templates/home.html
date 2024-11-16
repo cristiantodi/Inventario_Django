@@ -59,7 +59,9 @@
                 <div style="width: 50%;">
                     <form method="get" action="{% url 'filtrar' %}" role="search" style="    display: flex;">
                         <input class="form-control" type="search" name="buscar" placeholder="Buscar" aria-label="Buscar" value="{{ request.GET.buscar }}">
-                        <button class="btn btn-outline-success" type="submit">Buscar</button>
+                        <div class="content-btn-buscar">
+                            <button class="btn button-round" type="submit">Buscar</button>
+                        </div>
                     </form>
                 </div>
             </div>
