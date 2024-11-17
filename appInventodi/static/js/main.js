@@ -51,7 +51,7 @@ function actualizarTabla() {
         tbody.innerHTML += `
             <tr>
                 <td class="text-center">${producto.id}</td>
-                <td class="text-center"><img src="${producto.imagen_url}" width="40"></td> 
+                <td class="text-center"><img class="img-table" src="${producto.imagen_url}" width="40"></td> 
                 <td>${producto.nombre}</td>
                 <td>${producto.contenido}</td>
                 <td class="text-center">${producto.stock}</td>
@@ -74,30 +74,43 @@ function actualizarTotalPagar() {
     document.getElementById('total-pagar').innerText = `$ ${totalPagar}`;
 }
 
-// ---------------------------------------------------------------------------------
+// -----------------------Modal y Confirmar Venta-----------------------------------------------
 document.getElementById('vender').addEventListener('click', () => {
-    fetch('/tienda/vender-productos/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: JSON.stringify(productosTabla)
-    })
-    .then(response => {
-        if (response.ok) {
-            // Limpiar la tabla y los productos después de la venta
-            productosTabla = {};
-            actualizarTabla();
-            actualizarTotalPagar();
-            alert('Venta realizada con éxito');
-        } else {
-            alert('Error en la venta');
-        }
-    })
-    .catch(error => console.error('Error:', error));
-});
+    // Mostrar el modal de confirmación
+    const modal = new bootstrap.Modal(document.getElementById('confirmarVentaModal'));
+    modal.show();
 
+    // Manejar el clic en "Confirmar" en el modal
+    document.getElementById('confirmarVenta').addEventListener('click', () => {
+        // Realizar la venta
+        fetch('/tienda/vender-productos/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(productosTabla)
+        })
+        .then(response => {
+            if (response.ok) {
+                // Limpiar la tabla y los productos después de la venta
+                productosTabla = {};
+                actualizarTabla();
+                actualizarTotalPagar();
+                // alert('Venta realizada con éxito');
+            } else {
+                alert('Error en la venta');
+            }
+            // Cerrar el modal después de la venta
+            modal.hide();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Cerrar el modal si hay un error
+            modal.hide();
+        });
+    });
+});
 //---------------------------------Eliminar producto de la tabla/tienda----------
 document.querySelector('table tbody').addEventListener('contextmenu', function(event) {
     event.preventDefault(); // Prevenir el menú contextual predeterminado

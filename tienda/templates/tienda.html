@@ -5,6 +5,27 @@
 {% endblock %}
 
 {% block content %}
+
+<!-- ----------------------- Modal Confirmar venta ----------------------- -->
+<div class="modal fade" id="confirmarVentaModal" tabindex="-1" aria-labelledby="confirmarVentaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmarVentaLabel">Confirmar Venta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas realizar la venta?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="confirmarVenta">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- --------------------------------------------------------------------- -->
+
 <div class="div-input-buton">
   <form style="display: flex;"  id="buscar-form" role="search"  onsubmit="return false;">
     <input class="form-control" type="search" id="buscar" placeholder="Registrar" aria-label="Registrar">
@@ -16,6 +37,7 @@
     <button class="btn button-round" id="vender">Vender</button>
   </div>
 </div>
+
 <div class="position-table">
   <div class="wrapper card">
     <table class="table table-striped" style="margin: 0;">
@@ -49,16 +71,7 @@
       </thead>
       <tbody>
         {% for producto in products %}
-            <tr>
-                <td class="text-center">{{ producto.id }}</td>
-                <td class="text-center"><img src="{{ producto.imagen.url }}" width="40"></td>
-                <td>{{ producto.nombre }}</td>
-                <td>{{ producto.contenido }}</td>
-                <td class="text-center">{{ producto.cantidad }}</td>
-                <td class="text-center cantidad-display">0</td>
-                <td class="text-center">$ {{ producto.precio }}</td>
-                <td class="text-center total-display" id="total-parcial">$ 0</td>
-            </tr>
+            
         {% endfor %}
     </tbody>
     <tfoot>

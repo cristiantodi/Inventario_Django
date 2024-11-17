@@ -135,6 +135,12 @@
   color: white;
 }
 
+/* ------------CSS Home-------------------------- */
+.image-one {
+  border-radius: 50% 10% 50% 10% / 10% 50% 10% 50%;
+  box-shadow: 5px 5px 10px 4px rgba(32, 32, 32, 0.3);
+}
+
 /* ------------CSS Tienda-------------------------- */
 .custom-confirmation-box {
   position: fixed; /* Fijo a la ventana del navegador */

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import Group
-from tienda.models import productos
+from tienda.models import productos, categoria
 from django.contrib.auth import get_user_model
 
 User=get_user_model()
@@ -11,8 +11,10 @@ def contactanos(request):
 
 def home(request):
     products=productos.objects.all()
+    categorias= categoria.objects.all()
     grupos = Group.objects.all()  # Obtener todos los grupos
-    return render(request,"home.html", {'grupos': grupos, 'products':products})
+    return render(request,"home.html", {'grupos': grupos, 'products':products, 'categorias':categorias})
+
 
 def lista_productos(request):
     query = request.GET.get('buscar')
