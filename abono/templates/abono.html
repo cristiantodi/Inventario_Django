@@ -5,14 +5,25 @@
 {% endblock %}
 
 {% block content %}
+
+<!-- ----------------------- Modal Confirmar inventario ----------------------- -->
 <div style="margin-top: 2rem;">
   <div style="width: 100%; display: flex; justify-content: center;">
     <div style="width: 96%;">
-      <div style="width: 50%; margin-bottom: 1rem;">
+      <div style="display: flex; width: 100%; margin-bottom: 1rem; justify-content: space-between;">
         <form  role="search" style="display: flex;">
-          <input class="form-control" type="search" placeholder="Registrar" aria-label="Registrar">
-          <button class="btn btn-outline-success" type="button" onclick="buscarProducto()">Registrar</button>
+          <input class="form-control" type="search" placeholder="Ingrese ID o nombre" aria-label="Registrar">
+          
+          <div class="content-btn-buscar">
+            <button class="btn button-round" type="button" onclick="buscarProducto()">Buscar</button>
+          </div>
         </form>
+        <a href="{% url 'crearForm' %}" class="btn btn-primary">Abrir </a>
+
+        <!-- <a class="button-round" href="" id="crear-btn">Añadir</a> -->
+        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#infoModal">
+          Abrir Formulario
+        </button>   -->
       </div>
       <table class="table table-striped;">
         <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">

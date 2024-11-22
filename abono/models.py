@@ -11,12 +11,12 @@ class Metodo_pago(models.Model):
         return self.nombre_Pago
 
 class Abono(models.Model):
-    nombre      = models.CharField(max_length=70)
-    documento   = models.PositiveIntegerField()
-    metodo_pago = models.ManyToManyField(Metodo_pago, blank=True)
-    producto    = models.ManyToManyField(productos, blank=True)
-    num_pagos   = models.PositiveSmallIntegerField()
-    num_pagos_total   = models.PositiveSmallIntegerField()
+    nombre          = models.CharField(max_length=70)
+    documento       = models.PositiveIntegerField()
+    metodo_pago     = models.ManyToManyField(Metodo_pago, blank=True)
+    producto        = models.ManyToManyField(productos, blank=True)
+    num_pagos       = models.PositiveSmallIntegerField( )
+    num_pagos_total = models.PositiveSmallIntegerField()
 
     def mostrar_productos(self):
         return ", ".join([str(prod) for prod in self.producto.all()])

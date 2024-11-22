@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #My App's
+    'crispy_forms',
     'user',
     'appInventodi',
     'servicios',

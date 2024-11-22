@@ -3,6 +3,7 @@
 document.getElementById("guardar-btn").addEventListener("click", function() {
     // Mostrar el modal de confirmación
     const modalInventario = new bootstrap.Modal(document.getElementById('confirmarInventarioModal'));
+    console.log("Aqui inventario")
     modalInventario.show();
 
     document.getElementById('confirmaInventario').addEventListener('click', () => {
