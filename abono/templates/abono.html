@@ -11,19 +11,14 @@
   <div style="width: 100%; display: flex; justify-content: center;">
     <div style="width: 96%;">
       <div style="display: flex; width: 100%; margin-bottom: 1rem; justify-content: space-between;">
-        <form  role="search" style="display: flex;">
-          <input class="form-control" type="search" placeholder="Ingrese ID o nombre" aria-label="Registrar">
-          
+        <form method="GET" role="search" style="display: flex;">
+          <input class="form-control" name="documento" type="search" placeholder="Ingrese ID o nombre" aria-label="Buscar">        
           <div class="content-btn-buscar">
-            <button class="btn button-round" type="button" onclick="buscarProducto()">Buscar</button>
+              <button class="btn button-round" type="submit">Buscar</button>
           </div>
-        </form>
-        <a href="{% url 'crearForm' %}" class="btn btn-primary">Abrir </a>
-
-        <!-- <a class="button-round" href="" id="crear-btn">Añadir</a> -->
-        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#infoModal">
-          Abrir Formulario
-        </button>   -->
+      </form>
+          <a class="btn button-round" href="{% url 'crearForm' %}" >Crear </a>
+        
       </div>
       <table class="table table-striped;">
         <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">

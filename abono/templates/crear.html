@@ -1,6 +1,22 @@
+{% extends "base.html" %}
 <h1>Crear Nuevo Abonono</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar</button>
-</form>
+
+{% block content %}
+<div style="margin-top: 4rem;">
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="documento">Documento:</label>
+        <input type="number" id="documento" name="documento" oninput="buscarNombre()" required>
+
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" readonly>
+
+        {{ form.as_p }}
+        <button class="btn button-round" type="submit">Guardar</button>
+        <a class="btn button-round" href="{% url 'Abonos' %}">Cancelar</a>
+    </form>
+    
+</div>
+
+{% endblock %}
