@@ -6,6 +6,7 @@ body {
   padding-top: 3rem;
   /* padding-bottom: 3rem; */
   color: rgb(var(--bs-tertiary-color-rgb));
+  padding:0;
 }
 
 
@@ -48,7 +49,7 @@ body {
 ------------------------- */
 
 .featurette-divider {
-  margin: 5rem 0; /* Space out the Bootstrap <hr> more */
+  margin: 1rem 0; /* Space out the Bootstrap <hr> more */
 }
 
 /* Thin out the marketing headings */

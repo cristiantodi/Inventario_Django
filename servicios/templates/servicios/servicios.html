@@ -4,11 +4,9 @@
 
 {% block content %}
 
-
-
-    
+<div style="margin-top: 2rem;">
     {% for servicio in servicios %}  <!-- INICO DEL CONTENIDO DE LA PAGINA -->  <!-- DIMENCIONES DE LA IMAGEN 500x500-->
-        <hr class="featurette-divider">
+        
         <div class="container marketing contec-contac">
             <div class="row featurette"  >
                 <div class="col-md-7" >
@@ -21,6 +19,8 @@
             
             </div>
         </div>   
+        <hr class="featurette-divider">
     {% endfor %}                    <!-- FIN DEL CONTENIDO DE LA PAGINA -->
-    <hr class="featurette-divider">
+</div>
+    
 {% endblock %}
