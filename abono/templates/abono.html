@@ -28,6 +28,7 @@
             <th style="width:8%">Imagen</th>
             <th style="width:15%">Producto</th>
             <th style="width:20%">Descripcion</th>
+            <th style="width:20%">Metodo Pago</th>
             <th style="width:10%">Num Abonos</th>
             <th style="width:10%">Total abonado</th>
             <th style="width:10%; border-top-right-radius: 1rem">Precio Producto</th>
@@ -39,28 +40,32 @@
                     <td class="text-center">{{ cliente.documento }}</td>
                     <td class="text-center">{{ cliente.nombre }}</td>
                     <td class="text-center" >
-                            {% for prod in cliente.producto.all %}
-                                <img src="{{ prod.imagen.url }}" width="50" alt="{{ prod.nombre }}">
-                            {% endfor %}
-                        <img class="class="text-center src="{{ cliente.producto.imagen }}" width="50">
+                      {% for prod in cliente.producto.all %}
+                        <img src="{{ prod.imagen.url }}" width="50" alt="{{ prod.nombre }}">
+                      {% endfor %}
+                      <img class="class="text-center src="{{ cliente.producto.imagen }}" width="50">
                     </td>
                     <td>
-                        {% for prod in cliente.producto.all %}
-                            {{ prod.nombre }} 
-                        {% endfor %}
+                      {% for prod in cliente.producto.all %}
+                        {{ prod.nombre }} 
+                      {% endfor %}
                     </td>
                     <td>
-                        {% for prod in cliente.producto.all %}
-                            {{ prod.contenido }}
-                        {% endfor %}
+                      {% for prod in cliente.producto.all %}
+                        {{ prod.contenido }}
+                      {% endfor %}
+                    </td>
+                    <td class="text-center">       
+                      {% for prod in cliente.metodo_pago.all %}
+                        {{ prod.nombre_Pago }} 
+                      {% endfor %}
                     </td>
                     <td>{{ cliente.num_pagos }}</td>
-                    <td class="text-center">Pago abono</td>
-                        <td>
-                            {% for prod in cliente.producto.all %}
-                                {{ prod.precio }}
-                            {% endfor %}
-                        </td>
+                    <td class="text-center">{{ cliente.num_pagos_total }}</td>
+                    <td>
+                        {% for prod in cliente.producto.all %}
+                            {{ prod.precio }}
+                        {% endfor %}
                     </td>
                 </tr>
           {% endfor %}

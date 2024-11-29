@@ -2,9 +2,13 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .forms import AbonoForm
-from .models import Abono
+from .models import Abono, Metodo_pago
 
-# Create your views here.
+# Create your views here. 
+
+def metodoPago(request):
+    metodo_Pago = Metodo_pago.objects.all()
+    return render(request, 'tienda.html', {'metodo_Pago': metodo_Pago})
 
 
 def abonos(request):
@@ -24,16 +28,6 @@ def crearAbono(request):
             form.save()
             return redirect('Abonos')  # Redirige para evitar reenviar el formulario
     return render(request, 'crear.html', {'form': form})
-
-# def buscar_nombre(request):
-#     documento = request.GET.get('documento', None)
-#     if documento:
-#         try:
-#             abono = Abono.objects.get(documento=documento)
-#             return JsonResponse({'nombre': abono.nombre}, status=200)
-#         except Abono.DoesNotExist:
-#             return JsonResponse({'error': 'No se encontró el documento'}, status=404)
-#     return JsonResponse({'error': 'No se proporcionó el documento'}, status=400)
 
 def get_nombre(request):
     documento = request.GET.get('documento', None)

@@ -20,5 +20,9 @@ class Abono(models.Model):
 
     def mostrar_productos(self):
         return ", ".join([str(prod) for prod in self.producto.all()])
+    
+    def mostrar_metodo_pago(self):
+        return ", ".join([str(met_pago) for met_pago in self.metodo_pago.all()])
 
     mostrar_productos.short_description = 'Productos'
+    mostrar_metodo_pago.short_description = 'Metodo_Pago'
