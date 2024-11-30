@@ -14,12 +14,14 @@ class Abono(models.Model):
     nombre          = models.CharField(max_length=70)
     documento       = models.PositiveIntegerField()
     metodo_pago     = models.ManyToManyField(Metodo_pago, blank=True)
-    producto        = models.ManyToManyField(productos, blank=True)
+    producto        = models.ForeignKey(productos, on_delete=models.DO_NOTHING, blank=True)
     num_pagos       = models.PositiveSmallIntegerField( )
     num_pagos_total = models.PositiveSmallIntegerField()
 
+
     def mostrar_productos(self):
-        return ", ".join([str(prod) for prod in self.producto.all()])
+        # return ", ".join([str(prod) for prod in self.producto.all()])
+        return str(self.producto) if self.producto else "Sin producto"
     
     def mostrar_metodo_pago(self):
         return ", ".join([str(met_pago) for met_pago in self.metodo_pago.all()])

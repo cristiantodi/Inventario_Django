@@ -5,78 +5,81 @@
 {% endblock %}
 
 {% block content %}
-
+<div style="margin-top: 0rem;">
 <!-- ----------------------- Modal Confirmar inventario ----------------------- -->
-<div style="margin-top: 2rem;">
-  <div style="width: 100%; display: flex; justify-content: center;">
-    <div style="width: 96%;">
-      <div style="display: flex; width: 100%; margin-bottom: 1rem; justify-content: space-between;">
-        <form method="GET" role="search" style="display: flex;">
-          <input class="form-control" name="documento" type="search" placeholder="Ingrese ID o nombre" aria-label="Buscar">        
-          <div class="content-btn-buscar">
-              <button class="btn button-round" type="submit">Buscar</button>
-          </div>
-      </form>
-          <a class="btn button-round" href="{% url 'crearForm' %}" >Crear </a>
-        
+  <div class="div-input-buton">
+    <form method="GET" role="search" style="display: flex;">
+      <input class="form-control" name="documento" type="search" placeholder="Ingrese ID o nombre" aria-label="Buscar">        
+      <div class="content-btn-buscar">
+          <button class="btn button-round" type="submit">Buscar</button>
       </div>
-      <table class="table table-striped;">
-        <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">
+    </form>
+      <a class="btn button-round" href="{% url 'crearForm' %}" >Crear</a>       
+  </div>
+
+  <div class="position-table">
+    <div class="wrapper card">
+      <table class="table table-striped" style="margin: 0;">
+        <thead class="style-thead">
           <tr>
-            <th style="border-top-left-radius: 1rem; width:8%">Cedula</th>
-            <th style="width:15%">Nombre</th>
-            <th style="width:8%">Imagen</th>
-            <th style="width:15%">Producto</th>
-            <th style="width:20%">Descripcion</th>
-            <th style="width:20%">Metodo Pago</th>
-            <th style="width:10%">Num Abonos</th>
-            <th style="width:10%">Total abonado</th>
-            <th style="width:10%; border-top-right-radius: 1rem">Precio Producto</th>
+            <th>Cedula
+              <span class="draggable" onmousedown="initResize(0)"></span>
+            </th>
+            <th class="line-left">Nombre
+              <span class="draggable" onmousedown="initResize(1)"></span>
+            </th>
+            <th class="line-left">Imagen
+              <span class="draggable" onmousedown="initResize(2)"></span>
+            </th>
+            <th class="line-left">Producto
+              <span class="draggable" onmousedown="initResize(3)"></span>
+            </th>
+            <!-- <th>Descripcion
+              <span class="draggable" onmousedown="initResize(0)"></span>
+            </th> -->
+            <th class="line-left">Metodo Pago
+              <span class="draggable" onmousedown="initResize(4)"></span>
+            </th>
+            <th class="line-left">Num Abonos
+              <span class="draggable" onmousedown="initResize(5)"></span>
+            </th>
+            <th class="line-left">Total abonado
+              <span class="draggable" onmousedown="initResize(6)"></span>
+            </th>
+            <th class="line-left">Precio Producto</th>
           </tr>
         </thead>
         <tbody>
           {% for cliente in clientes %}
-                <tr>
-                    <td class="text-center">{{ cliente.documento }}</td>
-                    <td class="text-center">{{ cliente.nombre }}</td>
-                    <td class="text-center" >
-                      {% for prod in cliente.producto.all %}
-                        <img src="{{ prod.imagen.url }}" width="50" alt="{{ prod.nombre }}">
-                      {% endfor %}
-                      <img class="class="text-center src="{{ cliente.producto.imagen }}" width="50">
-                    </td>
-                    <td>
-                      {% for prod in cliente.producto.all %}
-                        {{ prod.nombre }} 
-                      {% endfor %}
-                    </td>
-                    <td>
-                      {% for prod in cliente.producto.all %}
-                        {{ prod.contenido }}
-                      {% endfor %}
-                    </td>
-                    <td class="text-center">       
-                      {% for prod in cliente.metodo_pago.all %}
-                        {{ prod.nombre_Pago }} 
-                      {% endfor %}
-                    </td>
-                    <td>{{ cliente.num_pagos }}</td>
-                    <td class="text-center">{{ cliente.num_pagos_total }}</td>
-                    <td>
-                        {% for prod in cliente.producto.all %}
-                            {{ prod.precio }}
-                        {% endfor %}
-                    </td>
-                </tr>
+            <tr>
+              <td class="text-center">{{ cliente.documento }}</td>  <!-- Documento cliente -->
+              <td>{{ cliente.nombre }}</td> <!-- Nombre del cliente -->
+              <td class="text-center"> <!-- Imagen producto -->
+                <img class="img-table" src="{{ cliente.producto.imagen.url }}" width="50" alt="{{ cliente.producto.nombre }}">
+              </td>
+              <td>  <!-- Nombre del Producto -->
+                {{ cliente.producto }}
+              </td>
+              <td>  <!-- Metodo de Pago -->       
+                {% for prod in cliente.metodo_pago.all %}
+                  {{ prod.nombre_Pago }} 
+                {% endfor %}
+              </td>
+              <td class="text-center">{{ cliente.num_pagos }}</td>  <!-- Cantidad de Nbonos -->
+              <td class="text-center">{{ cliente.num_pagos_total }}</td>  <!-- Total Abonado -->
+              <td class="text-center">  <!-- Precio del Producto -->
+                  {{ cliente.producto.precio }}
+              </td>
+            </tr>
           {% endfor %}
-      </tbody>
-      <tfoot>
-        <td colspan="4"></td>
-        <td colspan="2">TOTAL A PAGAR :</td>
-        <td colspan="2" id="total-pagar">$ 0</td>
-      </tfoot>
+        </tbody>
+        <tfoot>
+          <td colspan="4"></td>
+          <td colspan="2">TOTAL A PAGAR :</td>
+          <td colspan="2" id="total-pagar">$ 0</td>
+        </tfoot>
       </table>
     </div>
-  </div> 
+  </div>
 </div>
 {% endblock %}

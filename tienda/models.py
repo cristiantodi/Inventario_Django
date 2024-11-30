@@ -31,9 +31,12 @@ class productos(models.Model):
     # created = models.DateTimeField(auto_now_add=True)
     # updated = models.DateTimeField(auto_now=True) 
     # MIRAR, QUE CUANDO SE REALICE UN CAMBIO GUARDE QUE USUARIO LO REALIZO
+
+    def __str__(self):
+        return self.nombre
+    
     class Meta:
         verbose_name='producto'
         verbose_name_plural='productos'
 
-    def __str__(self):
-        return self.nombre
+    

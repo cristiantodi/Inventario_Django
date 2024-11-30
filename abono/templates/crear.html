@@ -1,45 +1,52 @@
 {% extends "base.html" %}
-<h1>Crear Nuevo Abonono</h1>
+
+{% block title %}
+    Creacion Abono
+{% endblock %}
 
 {% block content %}
-<div style="margin-top: 4rem;">
 
-    <form method="POST">
-        {% csrf_token %}
-        <div class="row mb-3 text-center">
-            <div class="col-xl-6">
-                <label for=""> Documento</label>
-                {{ form.documento }}
+<div class="position-table">
+    <div class="wrapper card">
+        <h1>Crear Nuevo Abonono</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div style="width: 100%; display: flex;" >
+                <div style="width: 50%;">
+                    <label for=""> Documento</label>
+                    {{ form.documento }}
+                </div>
+                <div style="width: 50%;">
+                    <label for=""> Nombre</label>
+                    {{ form.nombre }}
+                </div>
             </div>
-            <div class="col-xl-6">
-                <label for=""> Nombre</label>
-                {{ form.nombre }}
+            <div style="width: 100%; display: flex;" >
+                <div style="width: 50%;">
+                    <label for=""> Cantidad abonar</label>
+                    {{ form.num_pagos }}
+                </div>
+                <div style="width: 50%;">
+                    <label for=""> Producto</label>
+                    {{ form.producto }}
+                </div>
             </div>
-        </div>
-        <div class="row mb-3 text-center">
-            <div class="col-xl-6">
-                <label for=""> Cantidad abonar</label>
-                {{ form.num_pagos }}
+            <div  style="width: 100%; display: flex;" >
+                <div style="width: 50%;">
+                    <label for=""> Total abonado</label>
+                    {{ form.num_pagos_total }}
+                </div>
+                <div style="width: 50%;">
+                    <label for=""> Método de pago</label>
+                    {{ form.metodo_pago }}
+                </div>
             </div>
-            <div class="col-xl-6">
-                <label for=""> Producto</label>
-                {{ form.producto }}
-            </div>
-        </div>
-        <div class="row mb-3 text-center">
-            <div class="col-xl-6">
-                <label for=""> Total abonado</label>
-                {{ form.num_pagos_total }}
-            </div>
-            <div class="col-xl-6">
-                <label for=""> Método de pago</label>
-                {{ form.metodo_pago }}
-            </div>
-        </div>
-
-        <button class="btn button-round" type="submit">Guardar</button>
-        <a class="btn button-round" href="{% url 'Abonos' %}">Cancelar</a>
-    </form>
     
+            <button class="btn button-round" type="submit">Guardar</button>
+            <a class="btn button-round" href="{% url 'Abonos' %}">Cancelar</a>
+        </form>
+    </div>
 </div>
+
+
 {% endblock %}
