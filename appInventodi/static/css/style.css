@@ -189,7 +189,46 @@
 }
 
 /* ------------------------------Abono/Crear---------------------------------- */
+#id_documento, #id_nombre, #id_num_pagos, #id_num_pagos_total, #id_metodo_pago, #id_producto{
+  display: block;
+  width: 90%;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: var(--bs-body-bg);
+  background-clip: padding-box;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
 
+.input-form-crear{
+  margin-top: 0.5rem;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+}
+
+.input-button-crear{
+  width: 100%;
+  margin: 3rem 0rem 0rem 0rem;
+  display: flex;
+  /* flex-wrap: nowrap; */
+  justify-content: center;
+}
+
+.text-title{
+  font-size: 1.25rem ;
+  font-weight: 500;
+  margin: 0 ;
+}
 
 /* --------------------Estructura body/main/footer---------------------------- */
 html, body {

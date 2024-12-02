@@ -9,41 +9,42 @@
 <div class="position-table">
     <div class="wrapper card">
         <h1>Crear Nuevo Abonono</h1>
-        <form method="POST">
+        <form method="POST" style="padding: 1% 10%;">
             {% csrf_token %}
             <div style="width: 100%; display: flex;" >
-                <div style="width: 50%;">
-                    <label for=""> Documento</label>
+                <div class="input-form-crear">
+                    <p class="text-title"> Documento</p>
                     {{ form.documento }}
                 </div>
-                <div style="width: 50%;">
-                    <label for=""> Nombre</label>
+                <div class="input-form-crear">
+                    <p class="text-title"> Nombre</p>
                     {{ form.nombre }}
                 </div>
             </div>
             <div style="width: 100%; display: flex;" >
-                <div style="width: 50%;">
-                    <label for=""> Cantidad abonar</label>
+                <div class="input-form-crear">
+                    <p class="text-title"> Cantidad abonar</p>
                     {{ form.num_pagos }}
                 </div>
-                <div style="width: 50%;">
-                    <label for=""> Producto</label>
+                <div class="input-form-crear">
+                    <p class="text-title"> Producto</p>
                     {{ form.producto }}
                 </div>
             </div>
             <div  style="width: 100%; display: flex;" >
-                <div style="width: 50%;">
-                    <label for=""> Total abonado</label>
+                <div class="input-form-crear">
+                    <p class="text-title"> Total abonado</p>
                     {{ form.num_pagos_total }}
                 </div>
-                <div style="width: 50%;">
-                    <label for=""> Método de pago</label>
+                <div class="input-form-crear">
+                    <p class="text-title"> Método de pago</p>
                     {{ form.metodo_pago }}
                 </div>
             </div>
-    
-            <button class="btn button-round" type="submit">Guardar</button>
-            <a class="btn button-round" href="{% url 'Abonos' %}">Cancelar</a>
+            <div class="input-button-crear">
+                <button class="btn button-round" type="submit" style="margin: 0rem 2rem 2rem 0rem;">Guardar</button>
+                <a style="margin: 0rem 2rem 2rem 0rem;" class="btn button-round" href="{% url 'Abonos' %}">Cancelar</a>
+            </div>            
         </form>
     </div>
 </div>
