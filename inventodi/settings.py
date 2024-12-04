@@ -38,9 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #My App's
+    'crispy_forms',
     'user',
     'appInventodi',
+    'servicios',
     'tienda',
+    'credito',
 ]
 
 MIDDLEWARE = [
@@ -110,7 +113,8 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 # LANGUAGE_CODE = 'es-eu' # Cambio de idioma
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 

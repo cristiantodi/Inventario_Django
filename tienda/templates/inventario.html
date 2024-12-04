@@ -5,20 +5,46 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Formulario de búsqueda por ID -->
-    <div style="width: 50%; margin: 2rem 0rem 1rem 2%;">
+<div style="margin-top: 0rem;">
+
+    <!-- ----------------------- Modal Confirmar inventario ----------------------- -->
+    <div class="modal fade" id="confirmarInventarioModal" tabindex="-1" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmarInventarioLabel">Confirmar Inventario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas guardar cambios en el inventario?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmaInventario">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- --------------------------------------------------------------------- -->
+
+
+    <div class="div-input-buton">
         <form style="display: flex;" method="get" action="{% url 'lista_productos' %}">
-            <input type="text" name="query" id="query" placeholder="Ingrese ID o nombre">
-            <button class="btn btn-outline-success" type="submit">Buscar</button>
+            {% csrf_token %}
+            <input class="form-control" type="search" name="query" id="query" placeholder="Ingrese ID o nombre">
+            <div class="content-btn-buscar">
+                <button class="btn button-round" type="submit">Buscar</button>
+            </div>
         </form>
+        <div class="button-container">
+            <button class="btn button-round" type="button" id="guardar-btn">Guardar</button>
+        </div>
     </div>
     
-
-    <!-- Tabla de productos -->
-    <div style=" display: flex; justify-content: center;">
-        <div class="wrapper card ">
-            <table class="table table-striped;" style="margin: 0;">
-                <thead style="text-align: center; background-color: rgb(124, 124, 124) !important;">
+    <div class="position-table">
+        <div class="wrapper card">
+            <table class="table table-striped" style="margin: 0;">
+                <thead class="style-thead">
                     <tr>
                         <th>Id
                             <span class="draggable" onmousedown="initResize(0)"></span>
@@ -32,8 +58,11 @@
                         <th class="line-left">Description
                             <span class="draggable" onmousedown="initResize(3)"></span>
                         </th>
-                        <th class="line-left">Cantidad
+                        <th class="line-left">Stock
                             <span class="draggable" onmousedown="initResize(4)"></span>
+                        </th>
+                        <th class="line-left">Cantidad
+                            <span class="draggable" onmousedown="initResize(5)"></span>
                         </th>
                         <th class="line-left">Precio Unid
                             <span class="draggable"></span>
@@ -42,39 +71,23 @@
                 </thead>
                 <tbody>
                     {% for producto in productos %}
-                        <tr>
+                        <tr data-producto-id="{{ producto.id }}">
+                            <td class="text-center">{{ producto.id }}</td>
+                            <td class="text-center"><img class="img-table" src="{{ producto.imagen.url }}" ></td>
+                            <td>{{ producto.nombre }}</td>
+                            <td>{{ producto.contenido }}</td>
+                            <td class="text-center">{{ producto.cantidad }}</td>
                             <td>
-                                <span class="cell-content text-center" >{{ producto.id }}</span>
+                                <div class="text-center">
+                                    <input class="input-number-table" type="number" id="cantidad-{{ producto.id }}" value="0">
+                                </div>
                             </td>
-                            <td class="text-center">
-                                <img src="{{ producto.imagen.url }}" width="40">
-                            </td>
-                            <td>
-                                <span class="cell-content">{{ producto.nombre }}</span>
-                            </td>
-                            <td>
-                                <span class="cell-content">{{ producto.contenido }}</span>
-                            </td>
-                            <td >
-                                <div>
-                                    <form class="button-container" method="post" action="{% url 'lista_productos' %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="producto_id" value="{{ producto.id }}">
-                                        <button class="button-round add-button" type="submit" name="accion" value="decrementar">-</button>
-                                        {{ producto.cantidad }}
-                                        <button class="button-round subtract-button" type="submit" name="accion" value="incrementar">+</button>
-                                    </form>
-                                </div>                                
-                            </td>
-                            <td>
-                                <span class="cell-content text-center">
-                                    $ {{ producto.precio }}
-                                </span>
-                            </td>
-                        </tr>                        
+                            <td class="text-center">$ {{ producto.precio }}</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+</div>
 {% endblock %}

@@ -1,111 +1,160 @@
-// Función para obtener el token CSRF
-function getCSRFToken() {
-    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+// -------------------------------------TIENDA-------------------------------------------------------
+let productosTabla = {};  // Objeto para guardar productos y sus cantidades en la tabla
+
+function buscarProducto() {
+    const productoId = document.getElementById('buscar').value;
+    
+    fetch(`obtener-producto/?buscar=${productoId}`)
+        .then(response => response.json())
+        .then(data => {
+            agregarProductoATabla(data);
+            actualizarTotalPagar();
+        })
+        .catch(error => console.error('Error:', error));
+        
+    // Limpiar el campo de búsqueda después de registrar el producto
+    document.getElementById('buscar').value = '';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const addButtons = document.querySelectorAll('.add-button');
-    const subtractButtons = document.querySelectorAll('.subtract-button');
-    const sellButton = document.getElementById('sell-button');
+// Escuchar la tecla Enter en el input de búsqueda
+document.getElementById('buscar').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevenir el comportamiento predeterminado de recargar la página
+        buscarProducto(); // Llamar a la función para buscar el producto
+    }
+});
 
-    addButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const productId = button.getAttribute('data-product-id');
-            const cantidadElement = document.getElementById(`cantidad-${productId}`);
-            let cantidad = parseInt(cantidadElement.innerText);
-            cantidad += 1;
-            cantidadElement.innerText = cantidad;
+function agregarProductoATabla(producto) {
+    // Verificar si el producto ya está en la tabla
+    if (productosTabla[producto.id]) {
+        // Incrementar cantidad si el producto ya está
+        productosTabla[producto.id].cantidad++;
+    } else {
+        // Agregar el producto a la tabla si es nuevo
+        productosTabla[producto.id] = {
+            ...producto,
+            cantidad: 1,
+        };
+    }   
+    actualizarTabla();
+}
 
-            updateTotal(productId, cantidad, button);
-        });
-    });
+function actualizarTabla() {
+    const tbody = document.querySelector('table tbody');
+    tbody.innerHTML = '';  // Limpiar la tabla
 
-    subtractButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const productId = button.getAttribute('data-product-id');
-            const cantidadElement = document.getElementById(`cantidad-${productId}`);
-            let cantidad = parseInt(cantidadElement.innerText);
-            if (cantidad > 0) {
-                cantidad -= 1;
-                cantidadElement.innerText = cantidad;
+    // Recorrer productosTabla y renderizar cada producto
+    for (const id in productosTabla) {
+        const producto = productosTabla[id];
+        const total = producto.precio * producto.cantidad;
 
-                updateTotal(productId, cantidad, button);
-            }
-        });
-    });
+        tbody.innerHTML += `
+            <tr>
+                <td class="text-center">${producto.id}</td>
+                <td class="text-center"><img class="img-table" src="${producto.imagen_url}" width="40"></td> 
+                <td>${producto.nombre}</td>
+                <td>${producto.contenido}</td>
+                <td class="text-center">${producto.stock}</td>
+                <td class="text-center">${producto.cantidad}</td>
+                <td class="text-center">$ ${producto.precio}</td>
+                <td class="text-center total-display">$ ${total}</td>
+            </tr>
+        `;
+    }
+}
 
-    sellButton.addEventListener('click', () => {
-        const products = Array.from(document.querySelectorAll('.add-button')).map(button => {
-            const productId = button.getAttribute('data-product-id');
-            const cantidad = parseInt(document.getElementById(`cantidad-${productId}`).innerText);
-            return { id: productId, cantidad: cantidad };
-        });
-    
-        // Enviar la información al servidor para actualizar la base de datos
-        fetch('/tienda', {
+function actualizarTotalPagar() {
+    let totalPagar = 0;
+
+    for (const id in productosTabla) {
+        const producto = productosTabla[id];
+        totalPagar += producto.precio * producto.cantidad;
+    }
+
+    document.getElementById('total-pagar').innerText = `$ ${totalPagar}`;
+}
+
+// -----------------------Modal y Confirmar Venta-----------------------------------------------
+document.getElementById('vender').addEventListener('click', () => {
+    // Mostrar el modal de confirmación
+    const modal = new bootstrap.Modal(document.getElementById('confirmarVentaModal'));
+    modal.show();
+
+    // Manejar el clic en "Confirmar" en el modal
+    document.getElementById('confirmarVenta').addEventListener('click', () => {
+        // Realizar la venta
+        fetch('/tienda/vender-productos/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': '{{ csrf_token }}'
             },
-            body: JSON.stringify({ products: products })
-        }).then(response => response.json()).then(data => {
-            if (data.success) {
-                alert('Venta realizada con éxito');
-                location.reload();
+            body: JSON.stringify(productosTabla)
+        })
+        .then(response => {
+            if (response.ok) {
+                // Limpiar la tabla y los productos después de la venta
+                productosTabla = {};
+                actualizarTabla();
+                actualizarTotalPagar();
+                // alert('Venta realizada con éxito');
             } else {
-                alert('Error al vender productos');
+                alert('Error en la venta');
             }
+            // Cerrar el modal después de la venta
+            modal.hide();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Cerrar el modal si hay un error
+            modal.hide();
         });
     });
-
-    function updateTotal(productId, cantidad, button) {
-        const precio = parseFloat(button.getAttribute('data-precio'));
-        const totalElement = document.getElementById(`total-${productId}`);
-        const total = precio * cantidad;
-        totalElement.innerText = total;
-
-        updateTotalPagar();
-    }
-
-    function updateTotalPagar() {
-        let totalPagar = 0;
-        document.querySelectorAll('td[id^="total-"]').forEach(totalElement => {
-            totalPagar += parseFloat(totalElement.innerText) || 0;
-        });
-        document.getElementById('total-pagar').innerText = `$${totalPagar}`;
-    }
 });
+//---------------------------------Eliminar producto de la tabla/tienda----------
+document.querySelector('table tbody').addEventListener('contextmenu', function(event) {
+    event.preventDefault(); // Prevenir el menú contextual predeterminado
 
-// --------------------------SUMAR / RESTAR----------------------------------------------------
-function updateQuantity(button, delta) {
-    const quantityDisplay = delta === "increase" ? button.nextElementSibling : button.previousElementSibling;
-    let newQuantity = parseInt(quantityDisplay.innerText) + delta;
-  
-    if (newQuantity >= 0) {
-      quantityDisplay.innerText = newQuantity;
-      actualizarCantidad(button, newQuantity, delta);
+    // Eliminar cualquier cuadro de confirmación anterior
+    const existingConfirmationBox = document.querySelector('.custom-confirmation-box');
+    if (existingConfirmationBox) {
+        existingConfirmationBox.remove();
     }
-  }
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    document.addEventListener('click', function(event) {
-      if (event.target.classList.contains('add-button'))   
-   {
-        updateQuantity(event.target, "increase");
-      } else if (event.target.classList.contains('subtract-button')) {
-        updateQuantity(event.target, "decrease");
-      }
-    });
-  });
 
-function actualizarCantidad(button, nuevaCantidad, action) {
-    fetch("{% url 'buscar_producto' %}", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ action: action, quantity_change: 1 })
+    // Crear un cuadro de confirmación personalizado
+    const confirmationBox = document.createElement('div');
+    confirmationBox.classList.add('custom-confirmation-box');
+
+    // Agregar contenido al cuadro de confirmación
+    confirmationBox.innerHTML = `
+        <p>¿Estás seguro de que deseas eliminar este producto?</p>
+        <button id="confirmar">Confirmar</button>
+        <button id="cancelar">Cancelar</button>
+    `;
+
+    document.body.appendChild(confirmationBox);
+
+    // Manejar el clic en "Confirmar"
+    document.getElementById('confirmar').addEventListener('click', function() {
+        const row = event.target.closest('tr');
+        const productoId = row.querySelector('td').innerText; // El primer <td> contiene el id
+
+        // Eliminar el producto del objeto productosTabla
+        delete productosTabla[productoId];
+
+        // Actualizar la tabla y el total a pagar
+        actualizarTabla();
+        actualizarTotalPagar();
+
+        // alert('Producto eliminado de la tabla');
+
+        // Eliminar el cuadro de confirmación
+        confirmationBox.remove();
     });
-}
+
+    // Manejar el clic en "Cancelar"
+    document.getElementById('cancelar').addEventListener('click', function() {
+        // Eliminar el cuadro de confirmación
+        confirmationBox.remove();
+    });
+});

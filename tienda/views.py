@@ -2,83 +2,87 @@ from django.shortcuts import render, get_object_or_404, redirect
 from tienda.models import productos
 from django.http import JsonResponse
 import json
-from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
-@csrf_exempt
-def tienda(request):    
-    products=productos.objects.all()
+def tienda(request):
+    # Opcionalmente, puedes pasar productos si deseas mostrar algunos inicialmente
+    producto = productos.objects.all()
+    return render(request, 'tienda.html', {'producto': producto})
+
+# ----------------------------------------TIENDA------------------------------------------------------
+def obtener_producto(request):
+    producto_id = request.GET.get('buscar')
+    producto = get_object_or_404(productos, id=producto_id)
     
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            products = data.get('products', [])
-            
-            for item in products:
-                product_id = item['id']
-                cantidad = item['cantidad']
+    # Crear una respuesta JSON con los datos del producto
+    response_data = {
+        'id': producto.id,
+        'nombre': producto.nombre,
+        'imagen_url': producto.imagen.url if producto.imagen else '',
+        'contenido': producto.contenido,
+        'precio': producto.precio,
+        'stock': producto.cantidad,
+    }
+    
+    return JsonResponse(response_data)
 
-                # Obtener el producto y actualizar la cantidad en la base de datos
-                product = productos.objects.get(id=product_id)
-                if product.cantidad >= cantidad:
-                    product.cantidad -= cantidad
-                    product.save()
-                else:
-                    return JsonResponse({'success': False, 'error': 'No hay suficiente inventario para uno de los productos'})
-
-            return JsonResponse({'success': True})
-        except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)})
-    return render(request, "tienda.html", {"products":products})
-
-# ----------------------------------------------------------------------------------------------
-
+# -------------------------------------------------------------
+@csrf_exempt
+def vender_productos(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        
+        for id, producto in data.items():
+            prod = productos.objects.get(id=id)
+            prod.cantidad -= producto['cantidad']
+            if prod.cantidad < 0:
+                return JsonResponse({'error': 'Stock insuficiente'}, status=400)
+            prod.save()
+        
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+# ----------------------------------------INVENTARIO------------------------------------------------------
 def lista_productos(request):
     query = request.GET.get('query')
     productos_list = productos.objects.all()
 
-    # Verifica si la consulta de búsqueda existe
+    # Verificar si hay una consulta de búsqueda
     if query:
         try:
-            # Si es un número, busca por ID
+            # Si la consulta es un número, buscar por ID
             producto_id = int(query)
             productos_list = productos_list.filter(id=producto_id)
         except ValueError:
-            # Si no es un número, busca por nombre
+            # Si no es un número, buscar por nombre
             productos_list = productos_list.filter(nombre__icontains=query)
 
-    # Manejo de incremento o decremento de la cantidad
-    if request.method == 'POST':
-        producto = get_object_or_404(productos, id=request.POST.get('producto_id'))
-        accion = request.POST.get('accion')
-        if accion == 'incrementar':
-            producto.cantidad += 1
-        elif accion == 'decrementar' and producto.cantidad > 0:
-            producto.cantidad -= 1
-        producto.save()
-        return redirect('lista_productos')
-
+    # Manejo de incremento o decremento de la cantidad temporal
     return render(request, 'inventario.html', {'productos': productos_list})
 
-# def lista_productos(request):
-#     producto_id = request.GET.get('producto_id')
-#     productos_list = productos.objects.all()
+# ----------------------------------------------------------------------------
 
-#     # Si se ingresa un ID, obtener el producto específico
-#     if producto_id:
-#         productos_list = productos_list.filter(id=producto_id)
+def actualizar_stock(request):
+    if request.method == "POST":
+        try:
+            datos = json.loads(request.body)
+            cambios = datos.get('cambios', [])
 
-#     # Manejo de incremento o decremento de la cantidad
-#     if request.method == 'POST':
-#         producto = get_object_or_404(productos, id=request.POST.get('producto_id'))
-#         accion = request.POST.get('accion')
-#         if accion == 'incrementar':
-#             producto.cantidad += 1
-#         elif accion == 'decrementar' and producto.cantidad > 0:
-#             producto.cantidad -= 1
-#         producto.save()
-#         return redirect('lista_productos')
+            for cambio in cambios:
+                producto_id = cambio['id']
+                cantidad_cambio = cambio['cantidad']
 
-#     return render(request, 'inventario.html', {'productos': productos_list})
+                # Actualizar el producto en la base de datos
+                try:
+                    producto = productos.objects.get(id=producto_id)
+                    producto.cantidad += cantidad_cambio
+                    producto.save()
+                except productos.DoesNotExist:
+                    continue  # Si el producto no existe, saltar al siguiente cambio
+
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    return JsonResponse({"success": False, "error": "Método no permitido"})

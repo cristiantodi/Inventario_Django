@@ -22,32 +22,10 @@
         <link href="{% static 'css/carousel.css' %}" rel="stylesheet">
         <link href="{% static 'css/table.css' %}" rel="stylesheet">
         <link href="{% static 'img/logo.ico' %}" type="image/vnd.icon" rel="icon">
-        <style>
-            html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            }
-
-            body {
-                display: flex;
-                flex-direction: column;
-                padding-bottom: 0 rem !important;
-            }
-
-            main {
-                flex: 1;
-            }
-
-            footer {
-                width: 100%;
-            }
-        </style>
 
     </head>
 
-    <body >
+    <body>
         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
             <symbol id="check2" viewBox="0 0 16 16">
               <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
@@ -112,14 +90,23 @@
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <ul class="navbar-nav me-auto mb-2 mb-md-0">
                             <li class="nav-item">
-                                <a class="nav-link {% if request.path == '/' %} active {% endif %}" aria-current="page" href="{% url 'Home' %}">Inicio</a>
+                                <a class="nav-link {% if request.path == '/' %} present  {% endif %}" aria-current="page" href="{% url 'Home' %}">Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link  {% if request.path == '/tienda/' %} active {% endif %}" aria-current="page" href="{% url 'Tienda' %}">Tienda</a>
+                                <a class="nav-link  {% if request.path == '/tienda/' %} present {% endif %}" aria-current="page" href="{% url 'Tienda' %}">Tienda</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link  {% if request.path == '/tienda/inventario' %} active {% endif %}" aria-current="page" href="{% url 'lista_productos' %}">Inventario</a>
+                                <a class="nav-link  {% if request.path == '/servicios/' %} present {% endif %}" aria-current="page" href="{% url 'Servicios' %}">Servicios</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link  {% if request.path == '/tienda/productos/' %} present {% endif %}" aria-current="page" href="{% url 'lista_productos' %}">Inventario</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link  {% if request.path == '/credito/' %} present {% endif %}" aria-current="page" href="{% url 'Creditos' %}">Credito</a>
+                            </li>
+                            <!-- <li class="nav-item">
+                                <a class="nav-link  {% if request.path == '/contactanos/' %} present {% endif %}" aria-current="page" href="{% url 'contactanos' %}">Contactanos</a>
+                            </li> -->
                         </ul>
                         <div class="text-end">
                             <button type="button" class="btn btn-outline-light me-2">Login</button>
@@ -129,14 +116,12 @@
             </nav>
           </header>
 
-        <main >
-            <div>    
+        <main style="margin-top: 1rem;">
                 {% block content %}            
                 {% endblock %}
-            </div>
         </main>
 
-        <footer class="flex-wrap justify-content-between align-items-center border-top" style="margin-top: 1rem;padding: 0.5% 0rem 0.5% 3%; display: flex !important">
+        <footer class="" style="margin-top: 1rem;padding: 0.5% 0rem 0.5% 3%; display: flex !important">
             <div class="col-md-4 align-items-center">
                 <span class="mb-md-0 text-body-secondary">&copy; 2024 InverTodi, Inc</span>
             </div>
@@ -150,13 +135,19 @@
                 <a href="http://www.whatsapp.com">
                     <img class="ms-3" src="{% static 'img/what.png' %}" alt="WhatsApp" width="40" height="40" style="border-radius: 22%;">
                 </a> 
+                <a href="https://maps.app.goo.gl/puUXcixSYL7CX7vb6">
+                    <img class="ms-3" src="{% static 'img/map.png' %}" alt="WhatsApp" width="40" height="40" style="border-radius: 22%;">
+                </a> 
             </ul>
         </footer>
 
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
         <script src="{% static 'js/color-modes.js' %}"></script> 
         <script src="{% static 'js/main.js' %}"></script> 
-        <script  type="text/javascript" src="{% static 'js/table.js' %}"></script> 
+        <script src="{% static 'js/table.js' %}"></script> 
+        <script src="{% static 'js/inventario.js' %}"></script> 
+        <script src="{% static 'js/credito.js' %}"></script> 
+
 
     </body>
 </html>

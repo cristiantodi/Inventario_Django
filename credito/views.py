@@ -1,5 +1,6 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.timezone import now
 from django.http import JsonResponse
 from .forms import CreditoForm
 from .models import CrearCreadito, MetodoPago
@@ -13,7 +14,7 @@ def metodoPago(request):
 
 def creditos(request):
     credito = CrearCreadito.objects.all()
-    return render(request, "abono.html", {"clientes" : credito})
+    return render(request, "credito.html", {"clientes" : credito})
 
 # ----------------------------------------
 
@@ -39,6 +40,7 @@ def abonar(request, credito_id):
         nuevo_registro = {
             'cantidad': cantidad,
             'metodo_pago': MetodoPago.objects.get(id=metodo_pago_id).nombre,
+            "fecha": now().strftime("%Y-%m-%d %H:%M:%S")
         }
         registro_actual.append(nuevo_registro)
         credito.registroPago = registro_actual
@@ -50,6 +52,27 @@ def abonar(request, credito_id):
         'credito': credito,
         'metodos_pago': metodos_pago
     })
+
+# def abonar(request, credito_id):
+#     credito = get_object_or_404(CrearCreadito, id=credito_id)
+#     if request.method == "POST":
+#         metodo_pago_id = request.POST.get('metodo_pago')
+#         cantidad = float(request.POST.get('cantidad'))
+
+#         # Crear un nuevo registro de abono con la fecha actual
+#         nuevo_abono = {
+#             "cantidad": int(cantidad),
+#             "metodo_pago": MetodoPago.objects.get(id=metodo_pago_id).nombre,
+#             "fecha": now().strftime("%Y-%m-%d %H:%M:%S")  # Formato de fecha y hora
+#         }
+
+#         # Agregar el nuevo abono al campo registroPago
+#         credito.registroPago.append(nuevo_abono)
+#         credito.save()
+
+#         return redirect('Creditos')
+
+#     return render(request, 'pago.html', {'credito': credito})
 # ----------------------------------------
 
 def ver_registros(request, credito_id):
