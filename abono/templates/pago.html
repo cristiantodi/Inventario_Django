@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Pago Abono
+{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Abonar a Crédito</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div> 
+            <label>Documento:</label>
+            <input type="text" value="{{ credito.documento }}" disabled>
+        </div>
+        <div>
+            <label>Nombre:</label>
+            <input type="text" value="{{ credito.nombre }}" disabled>
+        </div>
+        <div>
+            <label>Producto:</label>
+            <input type="text" value="{{ credito.producto }}" disabled>
+        </div>
+        <div>
+            <label>Costo del Producto:</label>
+            <input type="text" value="{{ credito.producto.precio }}" disabled>
+        </div>
+        <div>
+            <label>Cantidad a Pagar:</label>
+            <input type="number" name="cantidad" required>
+        </div>
+        <div>
+            <label>Método de Pago:</label>
+            <select name="metodo_pago">
+                {% for metodo in metodos_pago %}
+                <option value="{{ metodo.id }}">{{ metodo.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar Abono</button>
+        <a href="{% url 'Creditos' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
