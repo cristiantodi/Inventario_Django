@@ -4,6 +4,8 @@
     Inventario
 {% endblock %}
 
+{% load humanize %}
+
 {% block content %}
 <div style="margin-top: 0rem;">
 
@@ -82,7 +84,7 @@
                                     <input class="input-number-table" type="number" id="cantidad-{{ producto.id }}" value="0">
                                 </div>
                             </td>
-                            <td class="text-center">$ {{ producto.precio }}</td>
+                            <td class="text-center">$ {{ producto.precio|intcomma }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

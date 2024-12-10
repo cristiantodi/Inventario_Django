@@ -5,15 +5,19 @@
 {% endblock %}
 
 {% block content %}
-
-<div>
-    <h2>Crear Crédito</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }} 
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a href="{% url 'Creditos' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
+<div class="conten-form-p" >
+    <div class="content-form-s">
+        <h2 style="text-align: center;">Crear Crédito</h2>
+        <form method="post" style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: space-around;">
+            {% csrf_token %}
+            {{ form.as_p }} 
+            <div style="display: flex; justify-content: center; margin: 2rem 0 0 0;">
+                <button type="submit" class="btn btn-primary content-btn-buscar">Guardar</button>
+                <a href="{% url 'Creditos' %}" class="btn btn-secondary content-btn-buscar">Cancelar</a>
+            </div>
+        </form>
+        
+    </div>
 </div>
 
 {% endblock %}

@@ -34,7 +34,7 @@ def abonar(request, credito_id):
     credito = get_object_or_404(CrearCreadito, id=credito_id)
     if request.method == "POST":
         metodo_pago_id = request.POST.get('metodo_pago')
-        cantidad = float(request.POST.get('cantidad'))
+        cantidad = int(request.POST.get('cantidad'))
         
         registro_actual = credito.registroPago or [] # Actualizar el JSONField de registroPago
         nuevo_registro = {

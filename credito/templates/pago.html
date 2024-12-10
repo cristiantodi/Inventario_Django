@@ -5,40 +5,45 @@
 {% endblock %}
 
 {% block content %}
-<div>
-    <h2>Abonar a Crédito</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div> 
-            <label>Documento:</label>
-            <input type="text" value="{{ credito.documento }}" disabled>
-        </div>
-        <div>
-            <label>Nombre:</label>
-            <input type="text" value="{{ credito.nombre }}" disabled>
-        </div>
-        <div>
-            <label>Producto:</label>
-            <input type="text" value="{{ credito.producto }}" disabled>
-        </div>
-        <div>
-            <label>Costo del Producto:</label>
-            <input type="text" value="{{ credito.producto.precio }}" disabled>
-        </div>
-        <div>
-            <label>Cantidad a Pagar:</label>
-            <input type="number" name="cantidad" required>
-        </div>
-        <div>
-            <label>Método de Pago:</label>
-            <select name="metodo_pago">
-                {% for metodo in metodos_pago %}
-                <option value="{{ metodo.id }}">{{ metodo.nombre }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Registrar Credito</button>
-        <a href="{% url 'Creditos' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
+<div class="conten-form-p" >
+    <div class="content-form-s-pago">
+        <h2 style="text-align: center;">Abonar a Crédito</h2>
+        <form method="post" style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: space-around;">
+            {% csrf_token %}
+            <div > 
+                <label>Documento:</label>
+                <input class="conten-pago-input" type="text" value="{{ credito.documento }}" disabled>
+            </div>
+            <div>
+                <label>Nombre:</label>
+                <input class="conten-pago-input" type="text" value="{{ credito.nombre }}" disabled>
+            </div>
+            <div>
+                <label>Producto:</label>
+                <input class="conten-pago-input" type="text" value="{{ credito.producto }}" disabled>
+            </div>
+            <div>
+                <label>Costo del Producto:</label>
+                <input class="conten-pago-input" type="text" value="{{ credito.producto.precio }}" disabled>
+            </div>
+            <div>
+                <label>Cantidad a Pagar:</label>
+                <input class="conten-pago-input" type="number" name="cantidad" placeholder="0" required>
+            </div>
+            <div>
+                <label>Método de Pago:</label>
+                <select class="conten-pago-input" name="metodo_pago">
+                    {% for metodo in metodos_pago %}
+                    <option value="{{ metodo.id }}">{{ metodo.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="display: flex; justify-content: center; margin: 2rem 0 0 0;">
+                <button type="submit" class="btn btn-primary content-btn-buscar">Guardar</button>
+                <a href="{% url 'Creditos' %}" class="btn btn-secondary content-btn-buscar">Cancelar</a>
+            </div>
+        </form>
+        
+    </div>
 </div>
 {% endblock %}

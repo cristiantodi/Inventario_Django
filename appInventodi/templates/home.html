@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+
 {% load static %} 
+{% load humanize %}
 
 {% block title %}
     InverTodi
@@ -80,7 +82,7 @@
                                 <p style="margin: 0;" >{{producto.contenido}}</p>
                                 {% if producto.cantidad > 0 %}
                                     <div class="" style="text-align: end;">
-                                        <small>$ {{producto.precio}}</small>
+                                        <small>$ {{producto.precio|intcomma}}</small>
                                     </div>
                                 {% else %}
                                     <div class="" style="text-align: end;">

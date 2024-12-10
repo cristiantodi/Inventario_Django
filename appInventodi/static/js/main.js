@@ -56,8 +56,8 @@ function actualizarTabla() {
                 <td>${producto.contenido}</td>
                 <td class="text-center">${producto.stock}</td>
                 <td class="text-center">${producto.cantidad}</td>
-                <td class="text-center">$ ${producto.precio}</td>
-                <td class="text-center total-display">$ ${total}</td>
+                <td class="text-center">$ ${producto.precio.toLocaleString('es-ES')}</td>
+                <td class="text-center total-display">$ ${total.toLocaleString('es-ES')}</td>
             </tr>
         `;
     }

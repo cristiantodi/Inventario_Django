@@ -4,6 +4,8 @@
     Credito
 {% endblock %}
 
+{% load humanize %}
+
 {% block content %}
 <!-- ----------------------- Modal Confirmar inventario ----------------------- -->
   <div class="div-input-buton">
@@ -53,7 +55,7 @@
         <tbody>
           {% for cliente in clientes %}
             <tr>
-              <td class="text-center">{{ cliente.documento }}</td>  <!-- Documento cliente -->
+              <td class="text-center">{{ cliente.documento|intcomma }}</td>  <!-- Documento cliente -->
               <td>{{ cliente.nombre }}</td> <!-- Nombre del cliente -->
               <td> <!-- Nombre del Producto -->
                 {{ cliente.producto }}
@@ -66,23 +68,23 @@
                 {{ cliente.producto.contenido }}
               </td>
               <td class="text-center">{{ cliente.num_abonos }}</td>  <!-- Cantidad de Abonos -->
-              <td class="text-center">{{ cliente.total_abonado }}</td>  <!-- Total Abonado -->
+              <td class="text-center">{{ cliente.total_abonado|intcomma }}</td>  <!-- Total Abonado -->
               <td class="text-center">
-                <a class="btn button-round btn-table" href="{% url 'abonar' cliente.id %}">Abonar</a>
+                <a class="btn button-round btn-table" href="{% url 'abonar' cliente.id %}">Pago</a>
                 <a class="btn button-round btn-table" href="{% url 'ver_registros' cliente.id %}">Ver</a>
 
               </td>
               <td class="text-center">  <!-- Precio del Producto -->
-                {{ cliente.producto.precio }}
+                $ {{ cliente.producto.precio|intcomma }}
               </td>
             </tr>
           {% endfor %}
         </tbody>
-        <tfoot>
+        <!-- <tfoot>
           <td colspan="4"></td>
           <td colspan="2">TOTAL A PAGAR :</td>
           <td colspan="2" id="total-pagar">$ 0</td>
-        </tfoot>
+        </tfoot> -->
       </table>
     </div>
   </div>

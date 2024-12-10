@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #My App's
     'crispy_forms',
+    'django.contrib.humanize',
     'user',
     'appInventodi',
     'servicios',

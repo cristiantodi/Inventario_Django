@@ -12,6 +12,7 @@
             {% block title %} 
             {% endblock %}
         </title>
+        {% load humanize %}
 
         {% load static %} 
 
@@ -121,22 +122,23 @@
                 {% endblock %}
         </main>
 
-        <footer class="" style="margin-top: 1rem;padding: 0.5% 0rem 0.5% 3%; display: flex !important">
-            <div class="col-md-4 align-items-center">
-                <span class="mb-md-0 text-body-secondary">&copy; 2024 InverTodi, Inc</span>
+        <footer>
+            <div class="col-md-4 align-items-center" style="width: 50%;">
+                <p class="mb-md-0 text-body-secondary">&copy; 2024 InverTodi, Inc</p>
             </div>
-            <ul class="nav list-unstyled d-flex" style="width: 50%; display: flex !important; justify-content: center !important;">
-                <a href="http://www.facebook.com">
-                    <img class="ms-3" src="{% static 'img/face.png' %}" alt="Facebook" width="40" height="40" style="border-radius: 22%;">
+            <ul class="nav list-unstyled d-flex" style="width: 57%;display: flex !important;flex-direction: row;
+                justify-content: center;">
+                <a href="http://www.facebook.com" >
+                    <img class="ms-3 footer-img" src="{% static 'img/face.png' %}" alt="Facebook">
                 </a>
-                <a href="http://www.instagram.com">
-                    <img class="ms-3" src="{% static 'img/insta.png' %}" alt="Instagram" width="40" height="40" style="border-radius: 22%;">
+                <a href="http://www.instagram.com" >
+                    <img class="ms-3 footer-img" src="{% static 'img/insta.png' %}" alt="Instagram">
                 </a>
-                <a href="http://www.whatsapp.com">
-                    <img class="ms-3" src="{% static 'img/what.png' %}" alt="WhatsApp" width="40" height="40" style="border-radius: 22%;">
+                <a href="http://www.whatsapp.com" >
+                    <img class="ms-3 footer-img" src="{% static 'img/what.png' %}" alt="WhatsApp">
                 </a> 
-                <a href="https://maps.app.goo.gl/puUXcixSYL7CX7vb6">
-                    <img class="ms-3" src="{% static 'img/map.png' %}" alt="WhatsApp" width="40" height="40" style="border-radius: 22%;">
+                <a href="https://maps.app.goo.gl/puUXcixSYL7CX7vb6" >
+                    <img class="ms-3 footer-img" src="{% static 'img/map.png' %}" alt="WhatsApp">
                 </a> 
             </ul>
         </footer>
@@ -151,3 +153,5 @@
 
     </body>
 </html>
+
+<!-- background: linear-gradient(to right, rgba(190, 190, 190, 0.5) 0%, rgb(122, 122, 122) 50%, rgba(190, 190, 190, 0.493) 100%); -->

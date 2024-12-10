@@ -51,7 +51,7 @@
     }
     
     .line-left{
-        border-left: 1px solid #dddddd79;
+        border-left: 1px solid #e0e0e0 !important;
     }
     
     .card table .cell-content {

@@ -11,12 +11,6 @@ color: var(--bs-navbar-active-color);
 font-weight: bold;
 }
 
-@media (min-width: 768px) {
-.bd-placeholder-img-lg {
-  font-size: 3.5rem;
-}
-}
-
 .b-example-divider {
 width: 100%;
 height: 3rem;
@@ -191,7 +185,7 @@ margin: 0px 0 0 1rem;
 /* ------------------------------Credito/Crear---------------------------------- */
 #id_documento, #id_nombre, #id_num_pagos, #id_num_pagos_total, #id_metodo_pago, #id_producto{
 display: block;
-width: 90%;
+width: 20rem;
 padding: .375rem .75rem;
 font-size: 1rem;
 font-weight: 400;
@@ -230,6 +224,65 @@ font-weight: 500;
 margin: 0 ;
 }
 
+.conten-form-p{
+  height: 100%; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+}
+
+.content-form-s{
+  display: flex;
+  padding: 5% 1rem 5% 1rem;
+  width: 50% !important;
+  margin: 0% 5% 0% 5%;
+  background: rgba(173, 173, 173, 0.452);
+  border: 2px solid rgba(128, 128, 128, 0.671);
+  border-radius: 3rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ------------------------------Credito/Abonar---------------------------------- */
+.conten-pago-input{
+  display: block;
+  width: 20rem;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+  appearance: auto;
+  background-color: var(--bs-body-bg);
+  background-clip: padding-box;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  }
+  /* .conten-form-p-pago{
+    height: 100%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    margin: 1rem 0 1rem 0rem;
+  } */
+.content-form-s-pago{
+  display: flex;
+  padding: 2% 1rem 2% 1rem;
+  width: 50% !important;
+  margin: 2% 5% 0% 5%;
+  background: rgba(173, 173, 173, 0.452);
+  border: 2px solid rgba(128, 128, 128, 0.671);
+  border-radius: 3rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
 /* --------------------Estructura body/main/footer---------------------------- */
 html, body {
   height: 100%; /* Asegura que html y body ocupen todo el alto de la ventana */
@@ -249,7 +302,38 @@ main {
 }
 
 footer {
-  background-color: #f8f9fa; /* Color de fondo opcional */
-  /* text-align: center;  */
+  /* background-color: #f8f9fa; */
   padding: 10px;
+  margin-top: 1rem;
+  padding: 0.5% 0rem 0.5% 3%; 
+  display: flex !important; 
+  border-top: 1px solid #ccc;
+  
+}
+
+.footer-img{
+  filter: drop-shadow(0 0 10px rgba(116, 116, 116, 0.5));
+  border-radius: 22%;
+  width: 2rem;
+}
+
+.conten-footer{
+  width: 50%; 
+  display: flex !important; 
+  justify-content: center !important;
+}
+
+@media (min-width: 768px) {
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+  }
+  .footer-img{
+    width: 2.6rem;
+  }
+  }
+
+@media (max-width: 600px) {
+  .content-form-s{
+    width: 90% !important;
+  }
 }
