@@ -282,6 +282,23 @@ margin: 0 ;
   justify-content: center;
 }
 
+/* ------------------------------Credito/Abonar---------------------------------- */
+.div-data-name {
+  width: 96%;
+  margin: 1rem 0rem 0.5rem 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.display-7 {
+  font-size: calc(1rem + 1vw);
+  font-weight: 350;
+  margin: 0 0 0 2%;
+}
+
+.display-7.nombre-credito{
+  font-weight: 400;
+} 
 
 /* --------------------Estructura body/main/footer---------------------------- */
 html, body {

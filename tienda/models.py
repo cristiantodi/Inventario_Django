@@ -7,9 +7,8 @@ class categoria(models.Model):
     imagenCategoria = models.ImageField(upload_to='Categoria_Tienda', null=True, blank=True)
     created         = models.DateTimeField(auto_now_add=True)
     updated         = models.DateTimeField(auto_now_add=True)
-    # created = models.DateTimeField(auto_now_add=True)
-    # updated = models.DateTimeField(auto_now=True) 
-    # MIRAR, QUE CUANDO SE REALICE UN CAMBIO GUARDE QUE USUARIO LO REALIZO
+    created         = models.DateTimeField(auto_now_add=True)
+    updated         = models.DateTimeField(auto_now=True) 
 
     class Meta:
         verbose_name='categoria'
@@ -28,9 +27,8 @@ class productos(models.Model):
     disponibilidad  = models.BooleanField(default=True)
     created         = models.DateTimeField(auto_now_add=True)
     updated         = models.DateTimeField(auto_now_add=True)
-    # created = models.DateTimeField(auto_now_add=True)
-    # updated = models.DateTimeField(auto_now=True) 
-    # MIRAR, QUE CUANDO SE REALICE UN CAMBIO GUARDE QUE USUARIO LO REALIZO
+    created         = models.DateTimeField(auto_now_add=True)
+    updated         = models.DateTimeField(auto_now=True) 
 
     def __str__(self):
         return self.nombre

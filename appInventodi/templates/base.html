@@ -105,6 +105,9 @@
                             <li class="nav-item">
                                 <a class="nav-link  {% if request.path == '/credito/' %} present {% endif %}" aria-current="page" href="{% url 'Creditos' %}">Credito</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link  {% if request.path == '/registro/' %} present {% endif %}" aria-current="page" href="{% url 'Registro' %}">Registro</a>
+                            </li>
                             <!-- <li class="nav-item">
                                 <a class="nav-link  {% if request.path == '/contactanos/' %} present {% endif %}" aria-current="page" href="{% url 'contactanos' %}">Contactanos</a>
                             </li> -->
@@ -118,7 +121,8 @@
           </header>
 
         <main style="margin-top: 1rem;">
-                {% block content %}            
+                {% block content %}       
+
                 {% endblock %}
         </main>
 
@@ -149,9 +153,8 @@
         <script src="{% static 'js/table.js' %}"></script> 
         <script src="{% static 'js/inventario.js' %}"></script> 
         <script src="{% static 'js/credito.js' %}"></script> 
-
-
+        <script src="{% static 'js/registro.js' %}"></script> 
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </body>
 </html>
 
-<!-- background: linear-gradient(to right, rgba(190, 190, 190, 0.5) 0%, rgb(122, 122, 122) 50%, rgba(190, 190, 190, 0.493) 100%); -->

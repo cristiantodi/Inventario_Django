@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'servicios',
     'tienda',
     'credito',
+    'registros',
 ]
 
 MIDDLEWARE = [
@@ -115,11 +116,12 @@ LANGUAGE_CODE = 'en-us'
 # LANGUAGE_CODE = 'es-eu' # Cambio de idioma
 
 # TIME_ZONE = 'UTC'
+
+USE_TZ = True
 TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

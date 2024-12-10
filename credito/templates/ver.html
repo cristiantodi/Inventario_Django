@@ -8,7 +8,11 @@
 
 {% block content %}
 
-<h2>Registros de Abonos para: {{ credito.nombre }}</h2>
+<div class="div-data-name">
+    <p class="display-7">Registros de pagos para:</p>
+    <p class="display-7 nombre-credito">{{ credito.nombre }}</p>
+</div>
+
 <div class="position-table">
     <div class="wrapper card">
       <table class="table table-striped" style="margin: 0;">

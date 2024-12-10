@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from tienda.models import productos
+from registros.models import RegistroVenta
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -29,6 +30,20 @@ def obtener_producto(request):
     return JsonResponse(response_data)
 
 # -------------------------------------------------------------
+# @csrf_exempt
+# def vender_productos(request):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+        
+#         for id, producto in data.items():
+#             prod = productos.objects.get(id=id)
+#             prod.cantidad -= producto['cantidad']
+#             if prod.cantidad < 0:
+#                 return JsonResponse({'error': 'Stock insuficiente'}, status=400)
+#             prod.save()
+        
+#         return JsonResponse({'status': 'success'})
+#     return JsonResponse({'error': 'Método no permitido'}, status=405)
 @csrf_exempt
 def vender_productos(request):
     if request.method == 'POST':
@@ -36,7 +51,15 @@ def vender_productos(request):
         
         for id, producto in data.items():
             prod = productos.objects.get(id=id)
-            prod.cantidad -= producto['cantidad']
+            cantidad_vendida = producto['cantidad']
+            
+            # Registrar venta
+            RegistroVenta.objects.create(
+                nombre=prod.nombre,
+                valor=prod.precio * cantidad_vendida
+            )
+
+            prod.cantidad -= cantidad_vendida
             if prod.cantidad < 0:
                 return JsonResponse({'error': 'Stock insuficiente'}, status=400)
             prod.save()
