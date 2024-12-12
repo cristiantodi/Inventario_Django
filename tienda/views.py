@@ -4,6 +4,8 @@ from registros.models import RegistroVenta
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction
+import logging
 
 # Create your views here.
 
@@ -30,42 +32,85 @@ def obtener_producto(request):
     return JsonResponse(response_data)
 
 # -------------------------------------------------------------
-# @csrf_exempt
-# def vender_productos(request):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-        
-#         for id, producto in data.items():
-#             prod = productos.objects.get(id=id)
-#             prod.cantidad -= producto['cantidad']
-#             if prod.cantidad < 0:
-#                 return JsonResponse({'error': 'Stock insuficiente'}, status=400)
-#             prod.save()
-        
-#         return JsonResponse({'status': 'success'})
-#     return JsonResponse({'error': 'Método no permitido'}, status=405)
+logger = logging.getLogger(__name__)
 @csrf_exempt
 def vender_productos(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        
-        for id, producto in data.items():
-            prod = productos.objects.get(id=id)
-            cantidad_vendida = producto['cantidad']
+        try:
+            data = json.loads(request.body)
+            logger.info(f'Datos recibidos: {data}')
             
-            # Registrar venta
-            RegistroVenta.objects.create(
-                nombre=prod.nombre,
-                valor=prod.precio * cantidad_vendida
-            )
+            with transaction.atomic():
+                for id, producto in data.items():
+                    try:
+                        prod = productos.objects.get(id=id)
+                    except productos.DoesNotExist:
+                        logger.error(f'Producto con ID {id} no encontrado')
+                        return JsonResponse({'error': f'Producto con ID {id} no encontrado'}, status=404)
+                    
+                    cantidad_vendida = producto.get('cantidad', 0)
+                    if prod.cantidad < cantidad_vendida:
+                        logger.warning(f'Stock insuficiente para el producto {prod.nombre}')
+                        return JsonResponse({'error': f'Stock insuficiente para el producto {prod.nombre}'}, status=400)
 
-            prod.cantidad -= cantidad_vendida
-            if prod.cantidad < 0:
-                return JsonResponse({'error': 'Stock insuficiente'}, status=400)
-            prod.save()
-        
-        return JsonResponse({'status': 'success'})
+                    prod.cantidad -= cantidad_vendida
+                    prod.save()
+
+                    RegistroVenta.objects.create(
+                        nombre=prod.nombre,
+                        valor=prod.precio * cantidad_vendida
+                    )
+                    logger.info(f'Venta registrada para producto {prod.nombre}')
+            
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            logger.error(f'Error inesperado: {str(e)}')
+            return JsonResponse({'error': f'Ocurrió un error inesperado: {str(e)}'}, status=500)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+# @csrf_exempt
+# def vender_productos(request):
+#     if request.method == 'POST':
+#         try:
+#             data = json.loads(request.body)
+            
+#             # Abrir una transacción para garantizar consistencia
+#             with transaction.atomic():
+#                 for id, producto in data.items():
+#                     # Validar que el producto exista
+#                     try:
+#                         prod = productos.objects.get(id=id)
+#                     except productos.DoesNotExist:
+#                         return JsonResponse({'error': f'Producto con ID {id} no encontrado'}, status=404)
+                    
+#                     # Validar que la cantidad solicitada sea válida
+#                     cantidad_vendida = producto.get('cantidad', 0)
+#                     if not isinstance(cantidad_vendida, int) or cantidad_vendida <= 0:
+#                         return JsonResponse({'error': f'Cantidad inválida para el producto con ID {id}'}, status=400)
+
+#                     # Verificar stock disponible
+#                     if prod.cantidad < cantidad_vendida:
+#                         return JsonResponse({'error': f'Stock insuficiente para el producto {prod.nombre}'}, status=400)
+
+#                     # Registrar venta
+#                     RegistroVenta.objects.create(
+#                         nombre=prod.nombre,
+#                         valor=prod.precio * cantidad_vendida
+#                     )
+
+#                     # Actualizar stock
+#                     prod.cantidad -= cantidad_vendida
+#                     prod.save()
+            
+#             return JsonResponse({'status': 'success'})
+#         except json.JSONDecodeError:
+#             return JsonResponse({'error': 'Datos JSON inválidos'}, status=400)
+#         except Exception as e:
+#             # Log para depuración
+#             return JsonResponse({'error': f'Ocurrió un error inesperado: {str(e)}'}, status=500)
+#     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
 # ----------------------------------------INVENTARIO------------------------------------------------------
 def lista_productos(request):
     query = request.GET.get('query')

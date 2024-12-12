@@ -106,7 +106,7 @@
                                 <a class="nav-link  {% if request.path == '/credito/' %} present {% endif %}" aria-current="page" href="{% url 'Creditos' %}">Credito</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link  {% if request.path == '/ventas/' %} present {% endif %}" aria-current="page" href="{% url 'registro_ventas' %}">Registro</a>
+                                <a class="nav-link  {% if request.path == '/registro/' %} present {% endif %}" aria-current="page" href="{% url 'registro_ventas' %}">Registro</a>
                             </li>
                             <!-- <li class="nav-item">
                                 <a class="nav-link  {% if request.path == '/contactanos/' %} present {% endif %}" aria-current="page" href="{% url 'contactanos' %}">Contactanos</a>
@@ -153,7 +153,6 @@
         <script src="{% static 'js/table.js' %}"></script> 
         <script src="{% static 'js/inventario.js' %}"></script> 
         <script src="{% static 'js/credito.js' %}"></script> 
-        <script src="{% static 'js/registro.js' %}"></script> 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </body>
 </html>

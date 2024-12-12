@@ -4,11 +4,11 @@ from tienda.models import productos
 
 
 class Venta(models.Model):
-    producto = models.ForeignKey(productos, on_delete=models.CASCADE)
-    cantidad = models.PositiveIntegerField()
-    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
-    total_venta = models.DecimalField(max_digits=10, decimal_places=2)
-    fecha = models.DateTimeField(auto_now_add=True)
+    producto        = models.ForeignKey(productos, on_delete=models.CASCADE)
+    cantidad        = models.PositiveIntegerField()
+    precio_unitario = models.PositiveIntegerField()
+    total_venta     = models.PositiveIntegerField()
+    fecha           = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Venta de {self.producto.nombre} - {self.fecha}"

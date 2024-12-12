@@ -1,52 +1,36 @@
 from django.shortcuts import render
 from django.db.models import Sum, F
-from registros.models import RegistroVenta
-from django.utils import timezone
-from django.utils.timezone import now, timedelta
+from django.db.models.functions import TruncDate
+from .models import Venta
 import json
-from datetime import datetime, timedelta
-
+from django.db.models import Count
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from tienda.models import productos
 from .models import Venta
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
 
-from django.db.models.functions import TruncDate
-from django.db.models import Count
-
-# def graficar_ventas(request):
-#     # Filtrar las ventas de los últimos 7 días
-#     hoy = timezone.now()  # Ahora con soporte de zona horaria
-#     hace_una_semana = hoy - timedelta(days=7)
-
-#     ventas = RegistroVenta.objects.filter(fecha__range=[hace_una_semana, hoy])
-
-#     # Agrupar por día y sumar valores
-#     ventas_por_dia = ventas.extra(select={'day': "DATE(fecha)"}).values('day').annotate(total=Sum('valor'))
-
-#     contexto = {
-#         'ventas_por_dia': ventas_por_dia,
-#     }
-#     return render(request, 'registro.html', contexto)
-
-# def graficar_ventas(request):
-#     hoy = now()
-#     hace_una_semana = hoy - timedelta(days=7)
-
-#     ventas = RegistroVenta.objects.filter(fecha__range=[hace_una_semana, hoy])
-#     ventas_por_dia = (
-#         ventas.extra(select={'day': "DATE(fecha)"})
-#         .values('day')
-#         .annotate(total=Sum('valor'))
-#     )
-
-#     # Convierte ventas_por_dia a JSON serializable
-#     ventas_por_dia_json = json.dumps(list(ventas_por_dia))
-
-#     contexto = {
-#         'ventas_por_dia': ventas_por_dia_json,  # Enviar JSON serializado al template
-#     }
-#     return render(request, 'registro.html', contexto)
+@csrf_exempt
+def registrar_venta(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            for item in data:
+                producto = productos.objects.get(id=item['producto_id'])
+                
+                # Crear registro de venta
+                Venta.objects.create(
+                    producto=producto,
+                    cantidad=item['cantidad'],
+                    precio_unitario=item['precio_unitario'],
+                    total_venta=item['cantidad'] * item['precio_unitario']
+                )
+            
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 def registro_ventas(request):
     # Obtener ventas
@@ -89,26 +73,3 @@ def registro_ventas(request):
     }
     
     return render(request, 'registro.html', context)
-
-@csrf_exempt
-def registrar_venta(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            
-            for item in data:
-                producto = productos.objects.get(id=item['producto_id'])
-                
-                # Crear registro de venta
-                Venta.objects.create(
-                    producto=producto,
-                    cantidad=item['cantidad'],
-                    precio_unitario=item['precio_unitario'],
-                    total_venta=item['cantidad'] * item['precio_unitario']
-                )
-            
-            return JsonResponse({'status': 'success'})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-    
-    return JsonResponse({'error': 'Método no permitido'}, status=405)

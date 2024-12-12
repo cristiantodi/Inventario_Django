@@ -71,7 +71,7 @@ function actualizarTotalPagar() {
         totalPagar += producto.precio * producto.cantidad;
     }
 
-    document.getElementById('total-pagar').innerText = `$ ${totalPagar}`;
+    document.getElementById('total-pagar').innerText = `$ ${totalPagar.toLocaleString('es-ES')}`;
 }
 
 // -----------------------Modal y Confirmar Venta-----------------------------------------------
@@ -80,37 +80,70 @@ document.getElementById('vender').addEventListener('click', () => {
     const modal = new bootstrap.Modal(document.getElementById('confirmarVentaModal'));
     modal.show();
 
-    // Manejar el clic en "Confirmar" en el modal
-    document.getElementById('confirmarVenta').addEventListener('click', () => {
-        // Realizar la venta
-        fetch('/tienda/vender-productos/', {
+    // Escuchar el clic en "Confirmar" una única vez
+    const confirmarVentaButton = document.getElementById('confirmarVenta');
+    confirmarVentaButton.removeEventListener('click', confirmarVentaHandler); // Evitar duplicación
+    confirmarVentaButton.addEventListener('click', confirmarVentaHandler);
+
+    function confirmarVentaHandler() {
+        // Preparar datos para enviar al backend
+        const ventaData = Object.keys(productosTabla).map(id => ({
+            producto_id: id,
+            cantidad: productosTabla[id].cantidad,
+            precio_unitario: productosTabla[id].precio
+        }));
+
+        const ventaPromise = fetch('/tienda/vender-productos/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': '{{ csrf_token }}'
             },
             body: JSON.stringify(productosTabla)
-        })
-        .then(response => {
-            if (response.ok) {
-                // Limpiar la tabla y los productos después de la venta
-                productosTabla = {};
-                actualizarTabla();
-                actualizarTotalPagar();
-                // alert('Venta realizada con éxito');
-            } else {
-                alert('Error en la venta');
-            }
-            // Cerrar el modal después de la venta
-            modal.hide();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            // Cerrar el modal si hay un error
-            modal.hide();
         });
-    });
+
+        const registroPromise = fetch('/registro/registrar-venta/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(ventaData)
+        });
+
+        // Realizar las solicitudes
+        Promise.all([ventaPromise, registroPromise])
+            .then(async ([ventaResponse, registroResponse]) => {
+                // Validar las respuestas
+                const ventaResultado = ventaResponse.ok ? await ventaResponse.json() : null;
+                const registroResultado = registroResponse.ok ? await registroResponse.json() : null;
+
+                if (ventaResponse.ok && registroResponse.ok) {
+                    // Limpiar la tabla y los productos después de la venta
+                    productosTabla = {};
+                    actualizarTabla();
+                    actualizarTotalPagar();
+
+                    // Mostrar mensaje de éxito
+                    alert('Venta realizada con éxito.');
+                } 
+                // else {
+                //     const ventaError = ventaResultado?.error || 'Error en la venta';
+                //     const registroError = registroResultado?.error || 'Error en el registro de la venta';
+                //     alert(`Errores:\n- ${ventaError}\n- ${registroError}`);
+                // }
+            })
+            .catch(error => {
+                console.error('Error inesperado:', error);
+                alert('Ocurrió un error inesperado durante la venta.');
+            })
+            .finally(() => {
+                // Cerrar el modal después de completar las operaciones
+                modal.hide();
+            });
+    }
 });
+
 //---------------------------------Eliminar producto de la tabla/tienda----------
 document.querySelector('table tbody').addEventListener('contextmenu', function(event) {
     event.preventDefault(); // Prevenir el menú contextual predeterminado
