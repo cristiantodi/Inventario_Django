@@ -8,44 +8,77 @@
 
 {% block content %}
 
-<div class="div-data-name">
-    <p class="display-7">Registro de ventas</p>
-</div>
-
-<div class="position-table">
-    <div class="wrapper card">
-    <canvas id="ventasGrafico" width="400" height="200"></canvas>
+<div class="container">
+    <h2>Registro de Ventas</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Ventas Diarias</h3>
+            <canvas id="graficaVentasDiarias"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h3>Productos Más Vendidos</h3>
+            <canvas id="graficaProductosVendidos"></canvas>
+        </div>
     </div>
+
+    <h3>Historial de Ventas</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Total Venta</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venta in ventas %}
+            <tr>
+                <td>{{ venta.producto.nombre }}</td>
+                <td>{{ venta.cantidad }}</td>
+                <td>${{ venta.precio_unitario }}</td>
+                <td>${{ venta.total_venta }}</td>
+                <td>{{ venta.fecha }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const ventasPorDia = JSON.parse('{{ ventas_por_dia|escapejs }}');
-        console.log(ventasPorDia); // Ahora puedes usarlo en tu código JavaScript
 
-        const labels = ventasPorDia.map(v => v.day);
-        const data = ventasPorDia.map(v => v.total);
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Gráfica de Ventas Diarias
+    const ventasDiarias = {{ datos_ventas_diarias | safe }};
+    const ctxVentasDiarias = document.getElementById('graficaVentasDiarias').getContext('2d');
+    new Chart(ctxVentasDiarias, {
+        type: 'line',
+        data: {
+            labels: ventasDiarias.map(v => v.fecha),
+            datasets: [{
+                label: 'Ventas Diarias',
+                data: ventasDiarias.map(v => v.total_ventas),
+                borderColor: 'blue',
+                tension: 0.1
+            }]
+        }
+    });
 
-        const ctx = document.getElementById('ventasGrafico').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Ventas por día',
-                    data: data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
+    // Gráfica de Productos Más Vendidos
+    const productosVendidos = {{ datos_productos_vendidos | safe }};
+    const ctxProductosVendidos = document.getElementById('graficaProductosVendidos').getContext('2d');
+    new Chart(ctxProductosVendidos, {
+        type: 'bar',
+        data: {
+            labels: productosVendidos.map(p => p.producto),
+            datasets: [{
+                label: 'Cantidad Vendida',
+                data: productosVendidos.map(p => p.cantidad),
+                backgroundColor: 'rgba(75, 192, 192, 0.6)'
+            }]
+        }
+    });
+</script>
         
 {% endblock %}
