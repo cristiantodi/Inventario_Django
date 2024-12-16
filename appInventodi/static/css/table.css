@@ -4,92 +4,94 @@
     z-index: 2;
     }
     
-    .card {
-    border-radius: 1rem;
-    box-shadow: 0 30px 40px rgb(97 102 120 / 12%);
-    width: 96%;
-    }
-    
-    .card header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 0 18px;
-    }
-    
-    .card table thead {
-        position: sticky;
-        top: 0;
-        left: 0;
-        z-index: 1;
-    }
-    
-    .card table th {
-        padding: 0 10px;
-        user-select: none;
-        text-transform: capitalize;
-    /* background: #555555; */
-    }
-    
-    .card table :is(th) {
-        position: relative;
-        overflow: hidden;
-        white-space: nowrap;
-        height: 32px;
-        vertical-align: middle;
-    
-    }
-    
-    .card table :is(td) {
-        padding: 0.2%;
-        vertical-align: middle;
-        position: relative;
-        overflow: hidden;
-        white-space: nowrap;
-        height: 32px;
-        border-bottom-width: var(--bs-border-width);
-    }
-    
-    .line-left{
-        border-left: 1px solid #e0e0e0 !important;
-    }
-    
-    .card table .cell-content {
-    width: 100%;
-    position: absolute;
-    top: 50%;
-    /* left: 10px; */
-    translate: 0 -50%;
-    }
-    
-    .card table th .draggable {
-    position: absolute;
+.card {
+border-radius: 1rem;
+box-shadow: 0 30px 40px rgb(97 102 120 / 12%);
+width: 96%;
+}
+
+.card header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin: 0 0 18px;
+}
+
+.card table thead {
+    position: sticky;
     top: 0;
-    right: 0;
-    bottom: 0;
-    width: 6px;
-    cursor: col-resize;
-    }
-    
-    input[type=number]::-webkit-inner-spin-button { opacity: 1}
-    
-    .input-number-table{
-        background: rgba(255, 255, 255, 0);
-        width: 50%;
-        text-align: center;
-        border: none;
-    }
-    
-    .position-table{
-        display: flex; 
-        justify-content: center;
-    }
-    
-    .style-thead{
-        text-align: center; background-color: rgb(124, 124, 124) !important;
-    }
-    
-    .img-table{
-        width: 3rem;
-        border-radius: 20%;
-    }
+    left: 0;
+    z-index: 1;
+}
+
+.card table th {
+    padding: 0 10px;
+    user-select: none;
+    text-transform: capitalize;
+/* background: #555555; */
+}
+
+.card table :is(th) {
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 32px;
+    vertical-align: middle;
+
+}
+
+.card table :is(td) {
+    padding: 0.2%;
+    vertical-align: middle;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 32px;
+    border-bottom-width: var(--bs-border-width);
+}
+
+.line-left{
+    border-left: 1px solid #e0e0e0 !important;
+}
+
+.card table .cell-content {
+width: 100%;
+position: absolute;
+top: 50%;
+/* left: 10px; */
+translate: 0 -50%;
+}
+
+.card table th .draggable {
+position: absolute;
+top: 0;
+right: 0;
+bottom: 0;
+width: 6px;
+cursor: col-resize;
+}
+
+input[type=number]::-webkit-inner-spin-button { opacity: 1}
+
+.input-number-table{
+    background: rgba(255, 255, 255, 0);
+    width: 50%;
+    text-align: center;
+    border: none;
+}
+
+.position-table{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.style-thead{
+    text-align: center; background-color: rgb(124, 124, 124) !important;
+}
+
+.img-table{
+    width: 3rem;
+    border-radius: 20%;
+}

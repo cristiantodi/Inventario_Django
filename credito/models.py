@@ -24,4 +24,5 @@ class CrearCreadito(models.Model):
 
     @property
     def total_abonado(self): #Calcula el total de montos abonados
-        return f"{"$"} { int(sum(pago.get('cantidad', 0) for pago in self.registroPago))}"
+        total = sum(int(pago.get('cantidad', 0)) for pago in self.registroPago)
+        return f"${total:,}"

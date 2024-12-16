@@ -56,10 +56,10 @@ def vender_productos(request):
                     prod.cantidad -= cantidad_vendida
                     prod.save()
 
-                    RegistroVenta.objects.create(
-                        nombre=prod.nombre,
-                        valor=prod.precio * cantidad_vendida
-                    )
+                    # RegistroVenta.objects.create(
+                    #     nombre=prod.nombre,
+                    #     valor=prod.precio * cantidad_vendida
+                    # )
                     logger.info(f'Venta registrada para producto {prod.nombre}')
             
             return JsonResponse({'status': 'success'})

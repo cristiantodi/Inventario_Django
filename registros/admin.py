@@ -6,7 +6,7 @@ from .models import RegistroVenta, Venta
 
 @admin.register(Venta)
 class VentaAdmin(admin.ModelAdmin):
-    list_display = ('producto', 'cantidad', 'precio_unitario', 'total_venta', 'fecha')
+    list_display = ('id','producto', 'cantidad', 'precio_unitario', 'total_venta', 'fecha')
     list_filter = ('fecha', 'producto')
     search_fields = ('producto__nombre',)
 

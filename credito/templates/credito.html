@@ -68,14 +68,13 @@
                 {{ cliente.producto.contenido }}
               </td>
               <td class="text-center">{{ cliente.num_abonos }}</td>  <!-- Cantidad de Abonos -->
-              <td class="text-center">{{ cliente.total_abonado }}</td>  <!-- Total Abonado -->
+              <td class="text-center">{{ cliente.total_abonado|intcomma }}</td>  <!-- Total Abonado -->
+              <td class="text-center">  <!-- Precio del Producto -->
+                $ {{ cliente.producto.precio|intcomma }}
+              </td>
               <td class="text-center">
                 <a class="btn button-round btn-table" href="{% url 'abonar' cliente.id %}">Pago</a>
                 <a class="btn button-round btn-table" href="{% url 'ver_registros' cliente.id %}">Ver</a>
-
-              </td>
-              <td class="text-center">  <!-- Precio del Producto -->
-                $ {{ cliente.producto.precio|intcomma }}
               </td>
             </tr>
           {% endfor %}

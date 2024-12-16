@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.db.models import Sum, F
 from django.db.models.functions import TruncDate
 from .models import Venta
+from django.core.paginator import Paginator
 import json
 from django.db.models import Count
 from django.http import JsonResponse
@@ -34,7 +35,13 @@ def registrar_venta(request):
 
 def registro_ventas(request):
     # Obtener ventas
-    ventas = Venta.objects.all()
+    # ventas = Venta.objects.all()
+    ventas = Venta.objects.all().order_by('-fecha')  # Ordenar por fecha descendente
+    paginator = Paginator(ventas, 20)  # Mostrar 20 registros por página
+
+    # Obtener el número de página actual
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
     # Preparar datos para gráfico de ventas diarias
     ventas_diarias = (Venta.objects
@@ -72,4 +79,9 @@ def registro_ventas(request):
         'datos_productos_vendidos': datos_productos_vendidos
     }
     
-    return render(request, 'registro.html', context)
+    # return render(request, 'registro.html', context)
+    return render(request, 'registro.html', {
+        'page_obj': page_obj,
+        'datos_ventas_diarias': datos_ventas_diarias,
+        'datos_productos_vendidos': datos_productos_vendidos,
+    })
