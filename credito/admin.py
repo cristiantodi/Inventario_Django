@@ -7,7 +7,7 @@ class MetodoPagoAdmin(admin.ModelAdmin):
     list_display = ["nombre"]
 
 class CreditoAdmin(admin.ModelAdmin):
-    list_display = ["id","nombre", "documento", "registroPago"]
+    list_display = ["id","nombre", "documento", "nPagos", "registroPago"]
 
 admin.site.register(CrearCreadito, CreditoAdmin)
 admin.site.register(MetodoPago, MetodoPagoAdmin)

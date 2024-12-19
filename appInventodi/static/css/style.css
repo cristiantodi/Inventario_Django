@@ -183,7 +183,7 @@ margin: 0px 0 0 1rem;
 }
 
 /* ------------------------------Credito/Crear---------------------------------- */
-#id_documento, #id_nombre, #id_num_pagos, #id_num_pagos_total, #id_metodo_pago, #id_producto{
+#id_documento, #id_nombre, #id_num_pagos, #id_num_pagos_total, #id_metodo_pago, #id_producto, #id_nPagos{
 display: block;
 width: 20rem;
 padding: .375rem .75rem;

@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="conten-form-p" >
+
+<!-- <div class="conten-form-p" >
     <div class="content-form-s">
         <h2 style="text-align: center;">Crear Crédito</h2>
         <form method="post" style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: space-around;">
@@ -17,6 +18,35 @@
             </div>
         </form>
         
+    </div>
+</div> -->
+
+<div class="conten-form-p" >
+    <div class="content-form-s">
+        <h2 style="text-align: center;">Crear Crédito</h2>
+        <form method="post" style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: space-around;">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <label for="id_username" class="form-label">Documento:</label>
+                {{ form.documento }}
+            </div>
+            <div class="form-group mb-3">
+                <label for="id_username" class="form-label">Nombre del Cliente:</label>
+                {{ form.nombre }}
+            </div>
+            <div class="form-group mb-3">
+                <label for="id_username" class="form-label">Producto:</label>
+                {{ form.producto }}
+            </div>
+            <div class="form-group mb-3">
+                <label for="id_username" class="form-label">Numero de pagos:</label>
+                {{ form.nPagos }}
+            </div>
+            <div style="display: flex; justify-content: center; margin: 2rem 0 0 0;">
+                <button type="submit" class="btn btn-primary content-btn-buscar">Guardar</button>
+                <a href="{% url 'Creditos' %}" class="btn btn-secondary content-btn-buscar">Cancelar</a>
+            </div>
+        </form>
     </div>
 </div>
 

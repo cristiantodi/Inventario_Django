@@ -4,13 +4,15 @@
     Pago Credito
 {% endblock %}
 
+{% load humanize %}
+
 {% block content %}
-<div class="conten-form-p" >
+<div class="conten-form-p">
     <div class="content-form-s-pago">
         <h2 style="text-align: center;">Abonar a Crédito</h2>
         <form method="post" style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: space-around;">
             {% csrf_token %}
-            <div > 
+            <div>
                 <label>Documento:</label>
                 <input class="conten-pago-input" type="text" value="{{ credito.documento }}" disabled>
             </div>
@@ -24,7 +26,15 @@
             </div>
             <div>
                 <label>Costo del Producto:</label>
-                <input class="conten-pago-input" type="text" value="{{ credito.producto.precio }}" disabled>
+                <input class="conten-pago-input" type="text" value="$ {{ credito.producto.precio|intcomma }}" disabled>
+            </div>
+            <div>
+                <label>Número de Abonos:</label>
+                <input class="conten-pago-input" type="text" value="{{ num_abonos }}" disabled>
+            </div>
+            <div>
+                <label>Total Abonado:</label>
+                <input class="conten-pago-input" type="text" value="{{ total_abonado }}" disabled>
             </div>
             <div>
                 <label>Cantidad a Pagar:</label>
@@ -43,7 +53,7 @@
                 <a href="{% url 'Creditos' %}" class="btn btn-secondary content-btn-buscar">Cancelar</a>
             </div>
         </form>
-        
     </div>
 </div>
+
 {% endblock %}

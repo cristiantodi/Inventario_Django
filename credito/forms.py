@@ -11,7 +11,7 @@ class CreditoForm(forms.ModelForm):
 
     class Meta:
         model = CrearCreadito
-        fields = [ 'documento', 'nombre', 'producto']
+        fields = [ 'documento', 'nombre', 'producto', 'nPagos']
         widgets = {
             'producto': forms.Select(attrs={'class': 'form-select'}),  # Lista desplegable para producto
         }

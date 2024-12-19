@@ -67,7 +67,7 @@
               <td> <!-- Metodo de Pago -->       
                 {{ cliente.producto.contenido }}
               </td>
-              <td class="text-center">{{ cliente.num_abonos }}</td>  <!-- Cantidad de Abonos -->
+              <td class="text-center">{{ cliente.num_abonos }} / {{cliente.nPagos}} </td>  <!-- Cantidad de Abonos -->
               <td class="text-center">{{ cliente.total_abonado|intcomma }}</td>  <!-- Total Abonado -->
               <td class="text-center">  <!-- Precio del Producto -->
                 $ {{ cliente.producto.precio|intcomma }}

@@ -11,6 +11,7 @@ class MetodoPago(models.Model):
 class CrearCreadito(models.Model):
     nombre      = models.CharField(max_length=100)
     documento   = models.PositiveIntegerField()
+    nPagos      = models.PositiveIntegerField()
     producto    = models.ForeignKey(productos, on_delete=models.DO_NOTHING, blank=True)
     metodoPago  = models.ManyToManyField(MetodoPago, blank=True)
     registroPago= models.JSONField(default=list)

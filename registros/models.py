@@ -1,7 +1,7 @@
 from django.db import models
 from tienda.models import productos
-# Create your models here.
 
+# Create your models here.
 
 class Venta(models.Model):
     producto        = models.ForeignKey(productos, on_delete=models.CASCADE)
