@@ -173,7 +173,7 @@ background-color: #0056b3; /* Fondo azul más oscuro al pasar por encima */
 /* ----------------------------- Servicios -------------------------------- */
 .contenedor{
   display: flex;
-  margin: 0;
+  /* margin: 2rem 0 0 0; */
   /* height: 100vh; */
   background: var(--gradient);
   color: #fdfcfd;
@@ -182,18 +182,25 @@ background-color: #0056b3; /* Fondo azul más oscuro al pasar por encima */
   align-items: center;
 }
 
-.card {
+.card-service {
   display: flex  ;
+  margin: 1rem 0 0 0;
   align-items: center;
-  width: 90vw;
+  width: 90%;
   /* max-width: 650px; */
-  padding: 44px 30px 44px 20px;
-  /* background: var(--card); */
+  padding: 1% 30px 1% 20px;
+  /* background: var(--card-service); */
   border-radius: 24px;
   flex-direction: row-reverse;
+  color: var(--bs-body-color);
+  border: var(--bs-card-border-width) solid var(--bs-card-border-color);
+  --bs-card-border-width: var(--bs-border-width);
+  --bs-card-border-color: var(--bs-border-color-translucent);
+  --bs-card-bg: var(--bs-body-bg);
+  background-color: var(--bs-card-bg);
 }
 
-.card img {
+.card-service-img {
   max-width: 280px;
   width: 36vw;
   height: 300px;
@@ -205,22 +212,22 @@ background-color: #0056b3; /* Fondo azul más oscuro al pasar por encima */
   transition: border-radius 0.3s;
 }
 
-.card h2 {
-  font-size: 22px;
+.card-service h2 {
+  font-size: 30px;
   font-weight: 400;
   margin-top: 0;
   margin-right: 30px;
   margin-bottom: 10px;
 }
 
-.card h3 {
-  font-size: 14px;
+.card-service h3 {
+  font-size: 18px;
   font-weight: 400;
   margin: 0;
   opacity: 0.75;
 }
 
-.card p {
+.card-service p {
   font-size: 13px;
   font-weight: 400;
   margin-bottom: 30px;
@@ -259,7 +266,7 @@ background-color: #0056b3; /* Fondo azul más oscuro al pasar por encima */
 .socials > button > i {
   position: relative;
   z-index: 1;
-  border: 4px solid var(--card);
+  border: 4px solid var(--card-service);
   background: #3f3b39;
   display: grid;
   place-items: center;
@@ -270,29 +277,29 @@ background-color: #0056b3; /* Fondo azul más oscuro al pasar por encima */
 }
 
 @media (width <= 600px) {
-  .card {
-    margin: 0 40px;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-bottom: 60px;
-    width: 100%;
+  .card-service {
+    margin: 0.5rem 40px;
+    /* padding-left: 50px; */
+    /* padding-right: 50px; */
+    /* padding-bottom: 60px; */
+    /* width: 100%; */
     text-align: center;
     flex-direction: column;
   }
 
-  .card h2 {
+  .card-service h2 {
     margin-right: 0;
     font-size: 26px;
   }
 
-  .card img {
-    margin: -100px 0 30px 0;
+  .card-service-img {
+    margin: 0px 0 0px 0;
     width: 100%;
     max-width: 1000px;
     height: 250px;
   }
 
-  .card p {
+  .card-service p {
     max-width: 360px;
   }
 
@@ -302,13 +309,13 @@ background-color: #0056b3; /* Fondo azul más oscuro al pasar por encima */
 }
 
 @media (width <= 440px) {
-  .card img {
+  .card-service-img {
     height: 50vw;
     width: 50vw;
     border-radius: 50%;
-    border: 12px solid var(--card);
+    border: 12px solid var(--card-service);
     box-shadow: none;
-    margin: -140px 0 30px 0;
+    margin: 0rem 0 0px 0;
   }
 }
 /* -----------------------------Inventario--------------------------------- */
