@@ -21,6 +21,7 @@ class Venta(models.Model):
 class RegistroVenta(models.Model):
     nombre  = models.CharField(max_length=100)
     valor   = models.PositiveIntegerField()
+    cantidad = models.PositiveIntegerField()  # Este debe ser un número
     fecha   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

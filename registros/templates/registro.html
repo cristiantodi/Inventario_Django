@@ -8,10 +8,14 @@
 
 {% block content %}
 <div style="margin-top: 0rem;">
-    <div class="div-input-buton ">
-        <h2>Registro de Ventas</h2>
+    <div class="div-input-buton">
+        <div>
+            <h2>Registro de Ventas</h2>
+        </div>
+        <div>
+            <a class="btn button-round" href="{% url 'ventas_mensuales' %}"> PDF </a>
+        </div>
     </div>
-    
     <div class="position-table">        
         <div class="row" style="width: 96%;">
             <div class="col-md-6">
@@ -24,6 +28,7 @@
             </div>
         </div>
     </div>
+
     <div class="div-input-buton ">
         <h3>Historial de Ventas</h3>
     </div>

@@ -12,41 +12,50 @@
         <h2 style="text-align: center;">Abonar a Crédito</h2>
         <form method="post" style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: space-around;">
             {% csrf_token %}
-            <div>
-                <label>Documento:</label>
-                <input class="conten-pago-input" type="text" value="{{ credito.documento }}" disabled>
+            <div class="row mb-3 text-center">
+                <div class="col-md-6 ">
+                    <label>Documento:</label>
+                    <input class="conten-pago-input" type="text" value="{{ credito.documento }}" disabled>
+                </div>
+                <div class="col-md-6 ">
+                    <label>Nombre:</label>
+                    <input class="conten-pago-input" type="text" value="{{ credito.nombre }}" disabled>
+                </div>
             </div>
-            <div>
-                <label>Nombre:</label>
-                <input class="conten-pago-input" type="text" value="{{ credito.nombre }}" disabled>
+            
+            <div class="row mb-3 text-center">
+                <div class="col-md-6 ">
+                    <label>Producto:</label>
+                    <input class="conten-pago-input" type="text" value="{{ credito.producto }}" disabled>
+                </div>
+                <div class="col-md-6 ">
+                    <label>Costo del Producto:</label>
+                    <input class="conten-pago-input" type="text" value="$ {{ credito.producto.precio|intcomma }}" disabled>
+                </div>
             </div>
-            <div>
-                <label>Producto:</label>
-                <input class="conten-pago-input" type="text" value="{{ credito.producto }}" disabled>
+            <div class="row mb-3 text-center">
+                <div class="col-md-6 ">
+                    <label>Número de Abonos:</label>
+                    <input class="conten-pago-input" type="text" value="{{ num_abonos }}" disabled>
+                </div>
+                <div class="col-md-6 ">
+                    <label>Total Abonado:</label>
+                    <input class="conten-pago-input" type="text" value="{{ total_abonado }}" disabled>
+                </div>
             </div>
-            <div>
-                <label>Costo del Producto:</label>
-                <input class="conten-pago-input" type="text" value="$ {{ credito.producto.precio|intcomma }}" disabled>
-            </div>
-            <div>
-                <label>Número de Abonos:</label>
-                <input class="conten-pago-input" type="text" value="{{ num_abonos }}" disabled>
-            </div>
-            <div>
-                <label>Total Abonado:</label>
-                <input class="conten-pago-input" type="text" value="{{ total_abonado }}" disabled>
-            </div>
-            <div>
-                <label>Cantidad a Pagar:</label>
-                <input class="conten-pago-input" type="number" name="cantidad" placeholder="0" required>
-            </div>
-            <div>
-                <label>Método de Pago:</label>
-                <select class="conten-pago-input" name="metodo_pago">
-                    {% for metodo in metodos_pago %}
-                    <option value="{{ metodo.id }}">{{ metodo.nombre }}</option>
-                    {% endfor %}
-                </select>
+            <div class="row mb-3 text-center">
+                <div class="col-md-6 ">
+                    <label>Cantidad a Pagar:</label>
+                    <input class="conten-pago-input" type="number" name="cantidad" placeholder="0" required>
+                </div>
+                <div class="col-md-6 ">
+                    <label>Método de Pago:</label>
+                    <select class="conten-pago-input" name="metodo_pago">
+                        {% for metodo in metodos_pago %}
+                        <option value="{{ metodo.id }}">{{ metodo.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
             <div style="display: flex; justify-content: center; margin: 2rem 0 0 0;">
                 <button type="submit" class="btn btn-primary content-btn-buscar">Guardar</button>

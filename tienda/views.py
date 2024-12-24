@@ -68,49 +68,6 @@ def vender_productos(request):
             return JsonResponse({'error': f'Ocurrió un error inesperado: {str(e)}'}, status=500)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-# @csrf_exempt
-# def vender_productos(request):
-#     if request.method == 'POST':
-#         try:
-#             data = json.loads(request.body)
-            
-#             # Abrir una transacción para garantizar consistencia
-#             with transaction.atomic():
-#                 for id, producto in data.items():
-#                     # Validar que el producto exista
-#                     try:
-#                         prod = productos.objects.get(id=id)
-#                     except productos.DoesNotExist:
-#                         return JsonResponse({'error': f'Producto con ID {id} no encontrado'}, status=404)
-                    
-#                     # Validar que la cantidad solicitada sea válida
-#                     cantidad_vendida = producto.get('cantidad', 0)
-#                     if not isinstance(cantidad_vendida, int) or cantidad_vendida <= 0:
-#                         return JsonResponse({'error': f'Cantidad inválida para el producto con ID {id}'}, status=400)
-
-#                     # Verificar stock disponible
-#                     if prod.cantidad < cantidad_vendida:
-#                         return JsonResponse({'error': f'Stock insuficiente para el producto {prod.nombre}'}, status=400)
-
-#                     # Registrar venta
-#                     RegistroVenta.objects.create(
-#                         nombre=prod.nombre,
-#                         valor=prod.precio * cantidad_vendida
-#                     )
-
-#                     # Actualizar stock
-#                     prod.cantidad -= cantidad_vendida
-#                     prod.save()
-            
-#             return JsonResponse({'status': 'success'})
-#         except json.JSONDecodeError:
-#             return JsonResponse({'error': 'Datos JSON inválidos'}, status=400)
-#         except Exception as e:
-#             # Log para depuración
-#             return JsonResponse({'error': f'Ocurrió un error inesperado: {str(e)}'}, status=500)
-#     return JsonResponse({'error': 'Método no permitido'}, status=405)
-
-
 # ----------------------------------------INVENTARIO------------------------------------------------------
 def lista_productos(request):
     query = request.GET.get('query')

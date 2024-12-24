@@ -225,6 +225,7 @@ background-color: #0056b3; /* Fondo azul más oscuro al pasar por encima */
   font-weight: 400;
   margin: 0;
   opacity: 0.75;
+  width: 90%;
 }
 
 .card-service p {
@@ -324,6 +325,7 @@ width: 96%;
 margin: 1rem 0rem 1rem 2%;
 display: flex;
 justify-content: space-between;
+align-items: center;
 }
 
 .content-btn-buscar{
@@ -331,7 +333,8 @@ margin: 0px 0 0 1rem;
 }
 
 /* ------------------------------Credito/Crear---------------------------------- */
-#id_documento, #id_nombre, #id_num_pagos, #id_num_pagos_total, #id_metodo_pago, #id_producto, #id_nPagos{
+#id_documento, #id_nombre, #id_num_pagos, #id_num_pagos_total, 
+#id_metodo_pago, #id_producto, #id_nPagos, #id_mes, #id_anio{
 display: block;
 width: 20rem;
 padding: .375rem .75rem;
@@ -395,7 +398,8 @@ margin: 0 ;
 /* ------------------------------Credito/Abonar---------------------------------- */
 .conten-pago-input{
   display: block;
-  width: 20rem;
+  /* width: 20rem; */
+  width: 100%;
   padding: .375rem .75rem;
   font-size: 1rem;
   font-weight: 400;
@@ -414,7 +418,7 @@ margin: 0 ;
 .content-form-s-pago{
   display: flex;
   padding: 2% 1rem 2% 1rem;
-  width: 50% !important;
+  /* width: 50% !important; */
   margin: 2% 5% 0% 5%;
   background: rgba(173, 173, 173, 0.452);
   border: 2px solid rgba(128, 128, 128, 0.671);
@@ -489,10 +493,14 @@ footer {
   .footer-img{
     width: 2.6rem;
   }
-  }
+  
+}
 
 @media (max-width: 600px) {
   .content-form-s{
+    width: 90% !important;
+  }
+  .content-form-s-pago{
     width: 90% !important;
   }
 }
