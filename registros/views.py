@@ -15,7 +15,6 @@ from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
-
 from datetime import datetime
 from django.utils.timezone import now, timedelta
 from django.conf import settings
@@ -26,6 +25,9 @@ from datetime import datetime
 import calendar
 import os
 import io
+
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib import colors
 
 @csrf_exempt
 def registrar_venta(request):
@@ -105,79 +107,98 @@ def registro_ventas(request):
 
 
 def ventas_mensuales(request):
-    if request.method == 'POST':
+    form = FiltroMesAnioForm()
+    mes = None
+    anio = None
+
+    if request.method == "POST":
         form = FiltroMesAnioForm(request.POST)
         if form.is_valid():
-            mes = int(form.cleaned_data['mes'])
-            anio = int(form.cleaned_data['anio'])
-
-            # Filtrar las ventas por mes y año
-            ventas = Venta.objects.filter(fecha__month=mes, fecha__year=anio)
-
-            # Si hay ventas, generar el PDF
-            return generar_pdf_ventas(request, mes, anio, ventas)
-    else:
-        form = FiltroMesAnioForm()
+            mes = form.cleaned_data['mes']
+            anio = form.cleaned_data['anio']
+            # Redirigir al template con los datos filtrados
+            return render(request, 'ventas_mensuales.html', {
+                'form': form,
+                'mes': mes,
+                'anio': anio
+            })
 
     return render(request, 'ventas_mensuales.html', {'form': form})
 
-def generar_pdf_ventas(request, mes, anio, ventas):
-    # Configurar la respuesta HTTP para el PDF
+def generar_pdf_ventas(request, mes, anio):
+    # Filtrar las ventas según el mes y el año
+    ventas = Venta.objects.filter(fecha__month=mes, fecha__year=anio)
+
+    # Calcular información adicional
+    total_vendido = sum(venta.precio_unitario * venta.cantidad for venta in ventas)
+    cantidad_vendida = sum(venta.cantidad for venta in ventas)
+
+    # Crear la respuesta HTTP con el contenido del PDF
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="ventas_{mes}_{anio}.pdf"'
 
-    # Crear un objeto canvas para generar el PDF
-    c = canvas.Canvas(response, pagesize=(600, 800))
+    # Crear el lienzo del PDF
+    pdf = canvas.Canvas(response, pagesize=letter)
+    width, height = letter
 
-    # Agregar el logo de la empresa
-    # logo_path = 'ruta/a/tu/logo.png'  # Cambia esto con la ruta de tu logo
-    # c.drawImage(logo_path, 30, 750, width=100, height=50)
+    # Función para dibujar encabezado en cada página
+    def draw_header():
+        # Dibujar el logo
+        # logo_path = "ruta/a/tu/logo.png"  # Cambia esta ruta al logo de tu empresa
+        # pdf.drawImage(logo_path, 40, height - 80, width=100, height=50)  # Ajusta la posición y tamaño del logo
 
-    # Título del PDF
-    c.setFont("Helvetica", 12)
-    c.drawString(200, 750, f"Ventas de {calendar.month_name[mes]} {anio}")
+        # Información superior
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(160, height - 50, f"Reporte de Ventas - {mes}/{anio}")
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(40, height - 100, f"Total productos vendidos: {cantidad_vendida}")
+        pdf.drawString(40, height - 120, f"Total vendido: ${total_vendido:,.2f}")
 
-    # Agregar los encabezados de la tabla
-    c.setFont("Helvetica-Bold", 10)
-    c.drawString(30, 700, "Producto")
-    c.drawString(150, 700, "Valor")
-    c.drawString(250, 700, "Cantidad")
-    c.drawString(350, 700, "Fecha")
+    # Preparar los datos de la tabla
+    data = [["#", "Producto", "Cantidad", "Precio Unitario", "Fecha"]]  # Encabezado
+    for i, venta in enumerate(ventas, start=1):
+        data.append([
+            i,
+            venta.producto.nombre,
+            venta.cantidad,
+            f"${venta.precio_unitario:,.2f}",
+            venta.fecha.strftime("%d/%m/%Y"),
+        ])
 
-    # Agregar los registros de ventas
-    y_position = 680
-    total_vendido = 0
-    cantidad_vendida = 0
+    # Configuración de estilo de la tabla
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ])
 
-    for venta in ventas:
-        if y_position < 100:  # Si la página está llena, crear una nueva página
-            c.showPage()
-            c.setFont("Helvetica-Bold", 10)
-            c.drawString(30, 750, "Producto")
-            c.drawString(150, 750, "Valor")
-            c.drawString(250, 750, "Cantidad")
-            c.drawString(350, 750, "Fecha")
-            y_position = 730
+    # Dividir la tabla en páginas
+    rows_per_page = 25  # Número máximo de filas por página (ajústalo según sea necesario)
+    current_row = 1
 
-        c.setFont("Helvetica", 10)
-        c.drawString(30, y_position, venta.producto.nombre)  # Nombre del producto
-        c.drawString(150, y_position, str(venta.precio_unitario))  # Precio unitario
-        c.drawString(250, y_position, str(venta.cantidad))  # Cantidad vendida
-        c.drawString(350, y_position, venta.fecha.strftime('%Y-%m-%d'))  # Fecha de la venta
+    while current_row < len(data):
+        # Dibujar encabezado
+        draw_header()
 
-        # Calcular totales
-        total_vendido += venta.precio_unitario * venta.cantidad
-        cantidad_vendida += venta.cantidad
+        # Seleccionar filas para esta página
+        page_data = data[current_row:current_row + rows_per_page]
 
-        y_position -= 20
+        # Crear la tabla de esta página
+        table_page = Table([data[0]] + page_data, colWidths=[50, 200, 80, 100, 100])
+        table_page.setStyle(style)  # Aplicar el estilo
+        table_page.wrapOn(pdf, width, height)
+        table_page.drawOn(pdf, 40, height - 600)  # Ajustar la posición de la tabla
 
-    # Agregar resumen con los totales
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(30, y_position - 20, f"Total productos vendidos: {cantidad_vendida}")
-    c.drawString(30, y_position - 40, f"Total vendido: ${total_vendido:.2f}")
+        # Mover a la siguiente página
+        current_row += rows_per_page
+        if current_row < len(data):
+            pdf.showPage()
 
-    # Guardar el PDF
-    c.showPage()
-    c.save()
-
+    # Finalizar el PDF
+    pdf.save()
     return response

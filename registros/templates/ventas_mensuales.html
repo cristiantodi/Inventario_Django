@@ -28,7 +28,7 @@
 
     {% if form.is_valid %}
         <h2>Ventas del mes de {{ form.cleaned_data.mes }}</h2>
-        <a href="{% url 'generar_pdf_ventas' mes=form.cleaned_data.mes %}">Generar PDF de ventas para {{ form.cleaned_data.mes }}</a>
+        <a href="{% url 'generar_pdf_ventas' mes=mes anio=anio %}">Generar PDF de ventas para {{ form.cleaned_data.mes }}</a>
     {% endif %}
 </div>
 </div>
