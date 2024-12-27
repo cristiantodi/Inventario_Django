@@ -10,11 +10,10 @@ def contactanos(request):
     return render(request,"contacto.html")
 
 def home(request):
-    products=productos.objects.all()
-    categorias= categoria.objects.all()
+    products = productos.objects.prefetch_related('imagenes').all()
+    categorias = categoria.objects.all()
     grupos = Group.objects.all()  # Obtener todos los grupos
-    return render(request,"home.html", {'grupos': grupos, 'products':products, 'categorias':categorias})
-
+    return render(request, "home.html", {'grupos': grupos, 'products': products, 'categorias': categorias})
 
 def lista_productos(request):
     query = request.GET.get('buscar')

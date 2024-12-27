@@ -71,31 +71,102 @@
                     </form>
                 </div>
             </div>
-  
-            {% for producto in products %}
-                <div class="col-6 col-sm-4 ">
-                    <div class="col">
-                        <div class="">
-                            <img class="image-one" title="{{producto.nombre}}" src="{{producto.imagen.url}}" width="100%" height="225">
-                            <div class="card-body" style="text-align: start; margin: 0 !important;">
-                                <h6 style="margin:0.5rem 0 0 0">{{producto.nombre}}</h6>
-                                <!-- <p style="margin: 0; font-weight: 500;">{{producto.contenido}}</p> -->
-                                {% if producto.cantidad > 0 %}
-                                    <div class="" style="text-align: end;">
-                                        <small style="font-weight: 500;">$ {{producto.precio|intcomma}}</small>
-                                    </div>
-                                {% else %}
-                                    <div class="" style="text-align: end;">
-                                        <small>No disponible</small>
-                                    </div>
-                                {% endif %}    
-                            </div>
-                        </div>
-                    </div>
+
+<!------------------------------ Modal ----------------------------------->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-header">
+                    <!-- <h5 class="modal-title" id="productModalLabel"></h5> -->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            {% endfor %}     
+                <div id="carouselProductImages" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-modal" id="modalCarouselInner">
+                    <!-- Las imágenes se cargarán dinámicamente -->
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProductImages" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProductImages" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <h5 class="modal-title" id="productModalLabel"></h5>
+                <p class="" id="modalDescription"></p>
+                <p><strong>Precio:</strong> $<span id="modalPrice"></span></p>
+                <p><strong>Cantidad disponible:</strong> <span id="modalQuantity"></span></p>
+            </div>
         </div>
     </div>
+  </div>
+<!------------------------------ ---- ----------------------------------->
 
+            {% for producto in products %}
+            <div class="col-6 col-sm-4">
+            <div class="col">
+                <div class="">
+                <img class="image-one" title="{{producto.nombre}}" 
+                    src="{{producto.imagen.url}}" 
+                    width="100%" height="225" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#productModal" 
+                    data-name="{{producto.nombre}}" 
+                    data-description="{{producto.contenido}}" 
+                    data-price="{{producto.precio}}" 
+                    data-quantity="{{producto.cantidad}}" 
+                    data-images='[{% for img in producto.imagenes.all %}"{{img.imagen.url}}"{% if not forloop.last %},{% endif %}{% endfor %}]'>
+                <div class="card-body" style="text-align: start; margin: 0 !important;">
+                    <h6 style="margin:0.5rem 0 0 0">{{producto.nombre}}</h6>
+                    {% if producto.cantidad > 0 %}
+                    <div class="" style="text-align: end;">
+                        <small style="font-weight: 500;">$ {{producto.precio|intcomma}}</small>
+                    </div>
+                    {% else %}
+                    <div class="" style="text-align: end;">
+                        <small>No disponible</small>
+                    </div>
+                    {% endif %}
+                </div>
+                </div>
+            </div>
+            </div>
+            {% endfor %} 
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const modal = document.getElementById('productModal');
+          const modalTitle = document.getElementById('productModalLabel');
+          const modalDescription = document.getElementById('modalDescription');
+          const modalPrice = document.getElementById('modalPrice');
+          const modalQuantity = document.getElementById('modalQuantity');
+          const modalCarouselInner = document.getElementById('modalCarouselInner');
+      
+          document.querySelectorAll('.image-one').forEach(image => {
+            image.addEventListener('click', () => {
+              const images = JSON.parse(image.getAttribute('data-images'));
+      
+              // Configurar el contenido del modal
+              modalTitle.textContent = image.getAttribute('data-name');
+              modalDescription.textContent = image.getAttribute('data-description');
+              modalPrice.textContent = parseInt(image.getAttribute('data-price')).toLocaleString();
+              modalQuantity.textContent = image.getAttribute('data-quantity');
+      
+              // Limpiar y añadir imágenes al carrusel
+              modalCarouselInner.innerHTML = '';
+              images.forEach((imgSrc, index) => {
+                const activeClass = index === 0 ? 'active' : '';
+                modalCarouselInner.innerHTML += `
+                  <div class="carousel-item ${activeClass}">
+                    <img src="${imgSrc}" class="d-block w-100" alt="Product Image">
+                  </div>`;
+              });
+            });
+          });
+        });
+      </script>
 
 {% endblock %}

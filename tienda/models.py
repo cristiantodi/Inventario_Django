@@ -37,4 +37,9 @@ class productos(models.Model):
         verbose_name='producto'
         verbose_name_plural='productos'
 
-    
+class productoImagen(models.Model):
+    producto = models.ForeignKey(productos, on_delete=models.CASCADE, related_name='imagenes')
+    imagen = models.ImageField(upload_to='tienda/productos')
+
+    def __str__(self):
+        return f"Imagen de {self.producto.nombre}"

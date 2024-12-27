@@ -24,9 +24,16 @@ body {
 
 /* Declare heights because of positioning of img element */
 .carousel-item {
-  height: 32rem;
+  /* height: 32rem; */
 }
 
+.carousel-modal {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  height: 50%;
+
+}
 
 /* MARKETING CONTENT
 -------------------------------------------------- */
