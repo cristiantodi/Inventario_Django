@@ -32,7 +32,15 @@ body {
   width: 100%;
   overflow: hidden;
   height: 50%;
+}
+.txt-modal{
+  text-align: left;
+}
 
+.body-modal{
+  position: relative;
+  flex: 1 1 auto;
+  padding: 0rem 0.5rem 0rem 0.5rem;
 }
 
 /* MARKETING CONTENT
