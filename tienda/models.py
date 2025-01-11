@@ -25,8 +25,6 @@ class productos(models.Model):
     disponibilidad  = models.BooleanField(default=True)
     created         = models.DateTimeField(auto_now_add=True)
     updated         = models.DateTimeField(auto_now_add=True)
-    created         = models.DateTimeField(auto_now_add=True)
-    updated         = models.DateTimeField(auto_now=True) 
 
     def __str__(self):
         return self.nombre
@@ -36,8 +34,22 @@ class productos(models.Model):
         verbose_name_plural='productos'
 
 class productoImagen(models.Model):
-    producto = models.ForeignKey(productos, on_delete=models.CASCADE, related_name='imagenes')
-    imagen = models.ImageField(upload_to='tienda/productos')
+    producto    = models.ForeignKey(productos, on_delete=models.CASCADE, related_name='imagenes')
+    imagen      = models.ImageField(upload_to='tienda/productos')
 
     def __str__(self):
         return f"Imagen de {self.producto.nombre}"
+
+class Venta(models.Model):
+    fecha_venta = models.DateTimeField(auto_now_add=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    detalles = models.JSONField()  # Almacenará los productos vendidos en formato JSON
+    estado = models.CharField(max_length=20, default='completada')
+    
+    class Meta:
+        verbose_name = 'venta'
+        verbose_name_plural = 'ventas'
+        ordering = ['-fecha_venta']  # Ordenar por fecha más reciente
+
+    def __str__(self):
+        return f"Venta #{self.id} - {self.fecha_venta.strftime('%Y-%m-%d %H:%M')}"

@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+{% csrf_token %}
 <div style="margin-top: 0rem;">
   <!-- ----------------------- Modal Confirmar venta ----------------------- -->
   <div class="modal fade" id="confirmarVentaModal" tabindex="-1" aria-labelledby="confirmarVentaLabel" aria-hidden="true">

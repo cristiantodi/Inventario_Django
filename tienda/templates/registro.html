@@ -1,0 +1,32 @@
+<!-- ventas/lista_ventas.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de Ventas</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venta in ventas %}
+            <tr>
+                <td>{{ venta.id }}</td>
+                <td>{{ venta.fecha_venta|date:"Y-m-d H:i" }}</td>
+                <td>${{ venta.total|floatformat:2 }}</td>
+                <td>{{ venta.estado }}</td>
+                <td>
+                    <a href="{% url 'detalle_venta' venta.id %}" class="btn btn-info btn-sm">Ver Detalles</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

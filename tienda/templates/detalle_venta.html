@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Detalle de Venta #{{ venta.id }}</h2>
+
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Fecha:</label>
+                    <input type="datetime-local" name="fecha_venta" class="form-control" value="{{ venta.fecha_venta|date:'Y-m-d\TH:i' }}">
+                </div>
+
+                <div class="form-group mt-3">
+                    <label>Estado:</label>
+                    <select name="estado" class="form-control">
+                        <option value="completada" {% if venta.estado == 'completada' %}selected{% endif %}>Completada</option>
+                        <option value="cancelada" {% if venta.estado == 'cancelada' %}selected{% endif %}>Cancelada</option>
+                        <option value="pendiente" {% if venta.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                    </select>
+                </div>
+
+                <h5 class="mt-4">Productos:</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for id, producto in venta.detalles.items %}
+                        <tr>
+                            <td>{{ id }}</td>
+                            <td>{{ producto.nombre }}</td>
+                            <td>
+                                <input type="number" name="cantidad_{{ id }}" class="form-control" value="{{ producto.cantidad }}" min="1">
+                            </td>
+                            <td>
+                                <input type="number" name="precio_{{ id }}" class="form-control" value="{{ producto.precio }}" step="0.01" min="0">
+                            </td>
+                            <td class="subtotal">${{ producto.cantidad|multiply:producto.precio|floatformat:2 }}</td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm eliminar-producto" data-id="{{ id }}">
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-right"><strong>Total:</strong></td>
+                            <td><strong>${{ venta.total|floatformat:2 }}</strong></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="text-end mt-3">
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Actualizar subtotales cuando cambian cantidad o precio
+    const actualizarSubtotal = (row) => {
+        const cantidad = parseFloat(row.querySelector('input[name^="cantidad_"]').value);
+        const precio = parseFloat(row.querySelector('input[name^="precio_"]').value);
+        const subtotal = cantidad * precio;
+        row.querySelector('.subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        actualizarTotal();
+    };
+
+    // Actualizar total
+    const actualizarTotal = () => {
+        const subtotales = Array.from(document.querySelectorAll('.subtotal'))
+            .map(el => parseFloat(el.textContent.replace('$', '')));
+        const total = subtotales.reduce((acc, curr) => acc + curr, 0);
+        document.querySelector('tfoot strong').textContent = `$${total.toFixed(2)}`;
+    };
+
+    // Event listeners para cambios en cantidad y precio
+    document.querySelectorAll('input[name^="cantidad_"], input[name^="precio_"]').forEach(input => {
+        input.addEventListener('change', (e) => {
+            actualizarSubtotal(e.target.closest('tr'));
+        });
+    });
+
+    // Eliminar producto
+    document.querySelectorAll('.eliminar-producto').forEach(button => {
+        button.addEventListener('click', function() {
+            if (confirm('¿Está seguro de eliminar este producto?')) {
+                this.closest('tr').remove();
+                actualizarTotal();
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

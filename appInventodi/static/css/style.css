@@ -74,6 +74,22 @@ z-index: 1500;
 display: block !important;
 }
 
+.modal-body-home{
+  position: relative;
+  flex: 1 1 auto;
+  padding: 0.4rem 0.5rem 0rem 0.5rem;
+}
+
+.modal-header-home {
+  display: flex ;
+    flex-shrink: 0;
+    align-items: center;
+    padding: 0px 0 0.4rem 0;
+    border-bottom: var(--bs-modal-header-border-width) solid var(--bs-modal-header-border-color);
+    border-top-left-radius: var(--bs-modal-inner-border-radius);
+    border-top-right-radius: var(--bs-modal-inner-border-radius);
+    justify-content: flex-end;
+}
 /* -------------------------------------------------------------------------- */
 
 .button-round {

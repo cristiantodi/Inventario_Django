@@ -86,61 +86,53 @@ document.getElementById('vender').addEventListener('click', () => {
     confirmarVentaButton.addEventListener('click', confirmarVentaHandler);
 
     function confirmarVentaHandler() {
-        // Preparar datos para enviar al backend
-        const ventaData = Object.keys(productosTabla).map(id => ({
-            producto_id: id,
-            cantidad: productosTabla[id].cantidad,
-            precio_unitario: productosTabla[id].precio
-        }));
-
-        const ventaPromise = fetch('/tienda/vender-productos/', {
+        // Obtener el token CSRF directamente del template
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+        // Preparar datos de venta
+        const ventaData = {};
+        for (const id in productosTabla) {
+            ventaData[id] = {
+                id: parseInt(id),
+                nombre: productosTabla[id].nombre,
+                cantidad: productosTabla[id].cantidad,
+                precio: productosTabla[id].precio,
+                total: productosTabla[id].precio * productosTabla[id].cantidad
+            };
+        }
+    
+        fetch('/tienda/vender-productos/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
+                'X-CSRFToken': csrftoken,
+                'Accept': 'application/json'
             },
-            body: JSON.stringify(productosTabla)
-        });
-
-        const registroPromise = fetch('/registro/registrar-venta/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
+            credentials: 'same-origin',  // Añade esta línea
             body: JSON.stringify(ventaData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Error al procesar la venta');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Limpiar la tabla y los productos después de la venta exitosa
+            productosTabla = {};
+            actualizarTabla();
+            actualizarTotalPagar();
+            alert('Venta realizada con éxito.');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.message || 'Ocurrió un error inesperado durante la venta.');
+        })
+        .finally(() => {
+            modal.hide();
         });
-
-        // Realizar las solicitudes
-        Promise.all([ventaPromise, registroPromise])
-            .then(async ([ventaResponse, registroResponse]) => {
-                // Validar las respuestas
-                const ventaResultado = ventaResponse.ok ? await ventaResponse.json() : null;
-                const registroResultado = registroResponse.ok ? await registroResponse.json() : null;
-
-                if (ventaResponse.ok && registroResponse.ok) {
-                    // Limpiar la tabla y los productos después de la venta
-                    productosTabla = {};
-                    actualizarTabla();
-                    actualizarTotalPagar();
-
-                    // Mostrar mensaje de éxito
-                    alert('Venta realizada con éxito.');
-                } 
-                // else {
-                //     const ventaError = ventaResultado?.error || 'Error en la venta';
-                //     const registroError = registroResultado?.error || 'Error en el registro de la venta';
-                //     alert(`Errores:\n- ${ventaError}\n- ${registroError}`);
-                // }
-            })
-            .catch(error => {
-                console.error('Error inesperado:', error);
-                alert('Ocurrió un error inesperado durante la venta.');
-            })
-            .finally(() => {
-                // Cerrar el modal después de completar las operaciones
-                modal.hide();
-            });
     }
 });
 

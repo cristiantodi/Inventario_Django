@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .header { text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .total { margin-top: 20px; text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Comprobante de Venta #{{ venta.id }}</h1>
+        <p>Fecha: {{ venta.fecha_venta|date:"Y-m-d H:i" }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unit.</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for id, producto in venta.detalles.items %}
+            <tr>
+                <td>{{ id }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.cantidad }}</td>
+                <td>${{ producto.precio|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total">
+        <h3>Total: ${{ venta.total|floatformat:2 }}</h3>
+    </div>
+</body>
+</html>

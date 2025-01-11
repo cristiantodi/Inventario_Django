@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import productos, categoria, productoImagen
+from .models import productos, categoria, productoImagen, Venta
 
 class productoImagenInline(admin.TabularInline):  # Nombre corregido
     model = productoImagen
@@ -35,3 +35,7 @@ class CategoriaAdmin(admin.ModelAdmin):
     search_fields = ("nombre", "updated")
     list_filter = ("created", "updated")
     date_hierarchy = "created"
+
+@admin.register(Venta)
+class VentaAdmin(admin.ModelAdmin):
+    list_display = ("id", "fecha_venta", "detalles", "total")
