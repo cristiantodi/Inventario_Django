@@ -41,6 +41,7 @@ class productoImagen(models.Model):
         return f"Imagen de {self.producto.nombre}"
 
 class Venta(models.Model):
+    nombre_cliente = models.CharField(max_length=200, null=True, blank=True)   
     fecha_venta = models.DateTimeField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     detalles = models.JSONField()  # Almacenará los productos vendidos en formato JSON

@@ -21,6 +21,11 @@
                 </div>
 
                 <div class="form-group mt-3">
+                    <label>Cliente:</label>
+                    <input type="text" name="nombre_cliente" class="form-control" value="{{ venta.nombre_cliente }}" placeholder="Nombre del cliente">
+                </div>
+
+                <div class="form-group mt-3">
                     <label>Estado:</label>
                     <select name="estado" class="form-control">
                         <option value="completada" {% if venta.estado == 'completada' %}selected{% endif %}>Completada</option>
@@ -30,47 +35,49 @@
                 </div>
 
                 <h5 class="mt-4">Productos:</h5>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Cantidad</th>
-                            <th>Precio Unitario</th>
-                            <th>Subtotal</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for id, producto in venta.detalles.items %}
-                        <tr>
-                            <td>{{ id }}</td>
-                            <td>{{ producto.nombre }}</td>
-                            <td>
-                                <input type="number" name="cantidad_{{ id }}" class="form-control" value="{{ producto.cantidad }}" min="1">
-                            </td>
-                            <td>
-                                <input type="number" name="precio_{{ id }}" class="form-control" value="{{ producto.precio }}" step="0.01" min="0">
-                            </td>
-                            <td class="subtotal">${{ producto.cantidad|multiply:producto.precio|floatformat:2 }}</td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm eliminar-producto" data-id="{{ id }}">
-                                    Eliminar
-                                </button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="4" class="text-right"><strong>Total:</strong></td>
-                            <td><strong>${{ venta.total|floatformat:2 }}</strong></td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Producto</th>
+                                <th>Contenido</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unit.</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in venta.detalles %}
+                            <tr>
+                                <td>{{ producto.id }}</td>
+                                <td>{{ producto.nombre }}</td>
+                                <td>
+                                    <textarea name="contenido_{{ producto.id }}" class="form-control">{{ producto.contenido }}</textarea>
+                                </td>
+                                <td>
+                                    <input type="number" name="cantidad_{{ producto.id }}" class="form-control cantidad" 
+                                           value="{{ producto.cantidad }}" min="1" data-precio="{{ producto.precio_unitario }}">
+                                </td>
+                                <td>
+                                    <input type="number" name="precio_{{ producto.id }}" class="form-control precio" 
+                                           value="{{ producto.precio_unitario }}" step="0.01" min="0">
+                                </td>
+                                <td class="subtotal">${{ producto.subtotal }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5" class="text-end"><strong>Total:</strong></td>
+                                <td><strong id="total">${{ venta.total }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
 
                 <div class="text-end mt-3">
+                    <a href="{% url 'lista_ventas' %}" class="btn btn-secondary content-btn-buscar">Volver</a>
                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                 </div>
             </form>
@@ -79,38 +86,27 @@
 </div>
 
 <script>
+function actualizarSubtotal(row) {
+    const cantidad = parseFloat(row.querySelector('.cantidad').value) || 0;
+    const precio = parseFloat(row.querySelector('.precio').value) || 0;
+    const subtotal = cantidad * precio;
+    row.querySelector('.subtotal').textContent = '$' + subtotal.toFixed(2);
+    actualizarTotal();
+}
+
+function actualizarTotal() {
+    let total = 0;
+    document.querySelectorAll('.subtotal').forEach(td => {
+        total += parseFloat(td.textContent.replace('$', '')) || 0;
+    });
+    document.getElementById('total').textContent = '$' + total.toFixed(2);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Actualizar subtotales cuando cambian cantidad o precio
-    const actualizarSubtotal = (row) => {
-        const cantidad = parseFloat(row.querySelector('input[name^="cantidad_"]').value);
-        const precio = parseFloat(row.querySelector('input[name^="precio_"]').value);
-        const subtotal = cantidad * precio;
-        row.querySelector('.subtotal').textContent = `$${subtotal.toFixed(2)}`;
-        actualizarTotal();
-    };
-
-    // Actualizar total
-    const actualizarTotal = () => {
-        const subtotales = Array.from(document.querySelectorAll('.subtotal'))
-            .map(el => parseFloat(el.textContent.replace('$', '')));
-        const total = subtotales.reduce((acc, curr) => acc + curr, 0);
-        document.querySelector('tfoot strong').textContent = `$${total.toFixed(2)}`;
-    };
-
     // Event listeners para cambios en cantidad y precio
-    document.querySelectorAll('input[name^="cantidad_"], input[name^="precio_"]').forEach(input => {
+    document.querySelectorAll('.cantidad, .precio').forEach(input => {
         input.addEventListener('change', (e) => {
             actualizarSubtotal(e.target.closest('tr'));
-        });
-    });
-
-    // Eliminar producto
-    document.querySelectorAll('.eliminar-producto').forEach(button => {
-        button.addEventListener('click', function() {
-            if (confirm('¿Está seguro de eliminar este producto?')) {
-                this.closest('tr').remove();
-                actualizarTotal();
-            }
         });
     });
 });

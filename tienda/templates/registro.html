@@ -4,29 +4,59 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Lista de Ventas</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Fecha</th>
-                <th>Total</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for venta in ventas %}
-            <tr>
-                <td>{{ venta.id }}</td>
-                <td>{{ venta.fecha_venta|date:"Y-m-d H:i" }}</td>
-                <td>${{ venta.total|floatformat:2 }}</td>
-                <td>{{ venta.estado }}</td>
-                <td>
-                    <a href="{% url 'detalle_venta' venta.id %}" class="btn btn-info btn-sm">Ver Detalles</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {% for venta in ventas %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h5 class="mb-0">Venta #{{ venta.id }}</h5>
+                </div>
+                <div class="col text-center">
+                    <p class="mb-0">Fecha: {{ venta.fecha_venta|date:"Y-m-d H:i" }}</p>
+                </div>
+                <div class="col text-end">
+                    <a href="{% url 'detalle_venta' venta.id %}" class="btn btn-info btn-sm">Editar</a>
+                    <a href="{% url 'generar_pdf_venta' venta.id %}" class="btn btn-danger btn-sm" target="_blank">
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Producto</th>
+                            <th>Contenido</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unit.</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in venta.detalles %}
+                        <tr>
+                            <td>{{ producto.id }}</td>
+                            <td>{{ producto.nombre }}</td>
+                            <td>{{ producto.contenido }}</td>
+                            <td>{{ producto.cantidad }}</td>
+                            <td>${{ producto.precio_unitario }}</td>
+                            <td>${{ producto.subtotal }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-end"><strong>Total:</strong></td>
+                            <td><strong>${{ venta.total }}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}

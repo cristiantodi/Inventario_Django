@@ -1,14 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import productos, Venta
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 import logging
-
-from django.template.loader import render_to_string
-# from weasyprint import HTML
-
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from io import BytesIO
 
 # Create your views here.
 
@@ -42,6 +41,8 @@ def vender_productos(request):
         try:
             data = json.loads(request.body)
             logger.info(f'Datos recibidos: {data}')
+            total_venta = 0
+            detalles_productos = []
             
             with transaction.atomic():
                 for id, producto in data.items():
@@ -56,16 +57,32 @@ def vender_productos(request):
                         logger.warning(f'Stock insuficiente para el producto {prod.nombre}')
                         return JsonResponse({'error': f'Stock insuficiente para el producto {prod.nombre}'}, status=400)
 
+                    # Calcular subtotal y actualizar total
+                    subtotal = prod.precio * cantidad_vendida
+                    total_venta += subtotal
+
+                    # Guardar detalles del producto
+                    detalles_productos.append({
+                        'id': prod.id,
+                        'nombre': prod.nombre,
+                        'contenido': prod.contenido,
+                        'precio_unitario': prod.precio,
+                        'cantidad': cantidad_vendida,
+                        'subtotal': subtotal
+                    })
+
                     prod.cantidad -= cantidad_vendida
                     prod.save()
-
-                    # RegistroVenta.objects.create(
-                    #     nombre=prod.nombre,
-                    #     valor=prod.precio * cantidad_vendida
-                    # )
                     logger.info(f'Venta registrada para producto {prod.nombre}')
+
+                # Crear el registro de venta
+                venta = Venta.objects.create(
+                    total=total_venta,
+                    detalles=detalles_productos
+                )
+                logger.info(f'Venta #{venta.id} creada exitosamente')
             
-            return JsonResponse({'status': 'success'})
+            return JsonResponse({'status': 'success', 'venta_id': venta.id})
         except Exception as e:
             logger.error(f'Error inesperado: {str(e)}')
             return JsonResponse({'error': f'Ocurrió un error inesperado: {str(e)}'}, status=500)
@@ -90,7 +107,6 @@ def lista_productos(request):
     return render(request, 'inventario.html', {'productos': productos_list})
 
 # ----------------------------------------------------------------------------
-
 def actualizar_stock(request):
     if request.method == "POST":
         try:
@@ -115,46 +131,22 @@ def actualizar_stock(request):
 
     return JsonResponse({"success": False, "error": "Método no permitido"})
 
-def vender_productos(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            total = sum(float(item['precio']) * int(item['cantidad']) 
-                       for item in data.values())
-            
-            with transaction.atomic():
-                # Crear el registro de venta
-                venta = Venta.objects.create(
-                    total=total,
-                    detalles=data
-                )
-                
-                # Actualizar el inventario
-                for id, producto in data.items():
-                    try:
-                        prod = productos.objects.get(id=id)
-                        cantidad_vendida = producto.get('cantidad', 0)
-                        if prod.cantidad < cantidad_vendida:
-                            raise Exception(f'Stock insuficiente para {prod.nombre}')
-                        prod.cantidad -= cantidad_vendida
-                        prod.save()
-                    except productos.DoesNotExist:
-                        raise Exception(f'Producto con ID {id} no encontrado')
-                
-            return JsonResponse({'status': 'success', 'venta_id': venta.id})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
-
+# -------------------------------------------------------------
 def lista_ventas(request):
     ventas = Venta.objects.all()
     return render(request, 'registro.html', {'ventas': ventas})
 
+# -------------------------------------------------------------
 def detalle_venta(request, venta_id):
     venta = get_object_or_404(Venta, id=venta_id)
     if request.method == 'POST':
         try:
             with transaction.atomic():
+                # Actualizar nombre_cliente si se proporciona
+                nuevo_nombre_cliente = request.POST.get('nombre_cliente')
+                if nuevo_nombre_cliente:
+                    venta.nombre_cliente = nuevo_nombre_cliente 
+
                 # Actualizar estado si se proporciona
                 nuevo_estado = request.POST.get('estado')
                 if nuevo_estado:
@@ -166,33 +158,38 @@ def detalle_venta(request, venta_id):
                     venta.fecha_venta = nueva_fecha
 
                 # Actualizar detalles de productos
-                detalles_actualizados = {}
+                detalles_actualizados = []
                 total_nuevo = 0
 
-                for key, value in request.POST.items():
-                    if key.startswith('cantidad_') or key.startswith('precio_'):
-                        producto_id = key.split('_')[1]
-                        if producto_id not in detalles_actualizados:
-                            detalles_actualizados[producto_id] = venta.detalles.get(producto_id, {}).copy()
-                        
-                        if key.startswith('cantidad_'):
-                            detalles_actualizados[producto_id]['cantidad'] = int(value)
-                        elif key.startswith('precio_'):
-                            detalles_actualizados[producto_id]['precio'] = float(value)
+                for producto in venta.detalles:
+                    producto_id = str(producto['id'])
+                    
+                    # Obtener los nuevos valores del formulario
+                    nueva_cantidad = int(request.POST.get(f'cantidad_{producto_id}', producto['cantidad']))
+                    nuevo_precio = float(request.POST.get(f'precio_{producto_id}', producto['precio_unitario']))
+                    nuevo_contenido = request.POST.get(f'contenido_{producto_id}', producto['contenido'])
+                    
+                    # Calcular nuevo subtotal
+                    subtotal = nueva_cantidad * nuevo_precio
+                    total_nuevo += subtotal
 
-                # Calcular nuevo total y actualizar detalles
-                for producto_id, detalles in detalles_actualizados.items():
-                    if 'cantidad' in detalles and 'precio' in detalles:
-                        subtotal = detalles['cantidad'] * detalles['precio']
-                        total_nuevo += subtotal
+                    # Actualizar el detalle del producto
+                    detalles_actualizados.append({
+                        'id': producto['id'],
+                        'nombre': producto['nombre'],
+                        'contenido': nuevo_contenido,
+                        'cantidad': nueva_cantidad,
+                        'precio_unitario': nuevo_precio,
+                        'subtotal': subtotal
+                    })
 
-                venta.total = total_nuevo
+                # Actualizar la venta con los nuevos detalles y total
                 venta.detalles = detalles_actualizados
+                venta.total = total_nuevo
                 venta.save()
 
                 return redirect('detalle_venta', venta_id=venta.id)
         except Exception as e:
-            # Aquí podrías agregar un mensaje de error
             print(f"Error al actualizar la venta: {str(e)}")
             return render(request, 'detalle_venta.html', {
                 'venta': venta,
@@ -201,19 +198,28 @@ def detalle_venta(request, venta_id):
 
     return render(request, 'detalle_venta.html', {'venta': venta})
 
-# def generar_pdf_venta(request, venta_id):
-#     venta = get_object_or_404(Venta, id=venta_id)
+# -------------------------------------------------------------
+def generar_pdf_venta(request, venta_id):
+    # Obtener la venta
+    venta = get_object_or_404(Venta, id=venta_id)
     
-#     # Renderizar el template HTML
-#     html_string = render_to_string('pdf_venta.html', {'venta': venta})
+    # Preparar el contexto para la plantilla
+    context = {
+        'venta': venta,
+        'detalles': venta.detalles,  # Los detalles ya están en el formato correcto
+    }
     
-#     # Crear el PDF
-#     html = HTML(string=html_string)
-#     result = html.write_pdf()
+    # Renderizar el template HTML
+    template = get_template('pdf_factura.html')
+    html = template.render(context)
     
-#     # Generar la respuesta HTTP
-#     response = HttpResponse(content_type='application/pdf')
-#     response['Content-Disposition'] = f'attachment; filename="venta_{venta_id}.pdf"'
-#     response.write(result)
+    # Crear el PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="venta_{venta_id}.pdf"'
     
-#     return response
+    # Generar PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Error al generar el PDF', status=500)
+    
+    return response
